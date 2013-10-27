@@ -1,0 +1,13 @@
+"AddonInfo"
+{
+	"name"		"Wyozi Media Center"
+	"version"	"0.1"
+	"up_date"	""
+	"author_name"	"Wyozi"
+	"author_email"	""
+	"author_url"	"http://www.github.com/wyozi"
+	"info"		""
+
+	"override"	"0"
+
+}
