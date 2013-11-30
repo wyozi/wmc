@@ -31,6 +31,8 @@ hook.Add("WyoziMCTabs", "WyoziMCAddSettingsTab", function(dtabs)
 
 		dgui:CheckBox("Enable debug mode", "wyozimc_debug")
 
+		dgui:CheckBox("Enable video debug mode", "wyozimc_debugvid")
+
 		dsettings:AddItem(dgui)
 
 	end
