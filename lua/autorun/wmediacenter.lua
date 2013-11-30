@@ -33,14 +33,17 @@ AddServer("sv_wmc_dbconnector.lua")
 
 AddShared("sh_wmc_providers.lua")
 AddServer("sv_wmc_storage.lua")
-AddClient("cl_wmc_gui.lua")
-AddClient("cl_wmc_hud.lua")
-AddClient("cl_wmc_gui_settings.lua")
+
 AddClient("cl_wmc_media.lua")
 AddClient("cl_wmc_player2.lua")
+
+AddClient("cl_wmc_gui.lua")
+AddClient("cl_wmc_gui_medialist.lua")
+AddClient("cl_wmc_gui_settings.lua")
+
+AddClient("cl_wmc_hud.lua")
 AddClient("cl_wmc_toolmenu.lua")
 
--- TTT integration was here. Newest updates have already broken it so it's not here anymore
 
 wyozimc.IsInitialized = true
 

@@ -27,6 +27,7 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 	if not wyozimc.ShowPlayingHUD then return end
 
 	local mc = wyozimc.MainContainer
+	if not mc then return end
 
 	if mc:has_flag(wyozimc.FLAG_NO_HUD) then return end
 

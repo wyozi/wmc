@@ -39,7 +39,7 @@ hook.Add("WyoziMCTabs", "WyoziMCAddSettingsTab", function(dtabs)
 
 	wyozimc.CallHook("WyoziMCAddToSettings", dsettings)
 
-	dtabs:AddSheet( "Settings", dsettings, "icon16/wrench_orange.png", false, false, "" )
+	dtabs:AddSheet( "Settings", dsettings, "icon16/wrench_orange.png", false, false, "WMC related settings" )
 end)
 
 local function LoadWmcNews()
