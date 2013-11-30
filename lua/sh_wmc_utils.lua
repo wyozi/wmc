@@ -73,4 +73,40 @@ if CLIENT then
 		wyozimc.ChatText(unpack(tbl))
 	end)
 
+	concommand.Add("wyozimc_luapatterntester", function()
+		local frame = vgui.Create("DFrame")
+		frame:SetSize(600, 400)
+
+		local patterninput = frame:Add("DTextEntry")
+		local testinput = frame:Add("DTextEntry")
+		local resultlabel = frame:Add("DTextEntry")
+		resultlabel:SetEnabled(false)
+		resultlabel:SetMultiline(true)
+
+		resultlabel:SetPos(10, 265)
+		resultlabel:SetSize(580, 125)
+
+		local function UpdatePatternTest()
+			local matches = {(testinput:GetText()):match(patterninput:GetText())}
+			local str = "Matches:\n"
+			for k,v in pairs(matches) do
+				str = str .. "#" .. k .. ": " .. v .. "\n"
+			end
+			resultlabel:SetText(str)
+		end
+
+		patterninput:SetPos(10, 30)
+		patterninput:SetSize(580, 25)
+		patterninput.OnTextChanged = UpdatePatternTest
+
+		testinput:SetMultiline(true)
+		testinput:SetPos(10, 60)
+		testinput:SetSize(580, 200)
+		testinput.OnTextChanged = UpdatePatternTest
+
+		frame:Center()
+
+		frame:MakePopup()
+	end)
+
 end
