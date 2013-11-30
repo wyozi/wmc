@@ -15,12 +15,16 @@ if wyozimc.UseDatabaseStorage then
 			wyozimc.Database:Query(function(data)
 				local tbl = {}
 				for _,v in pairs(data) do
-					table.insert(tbl, {
+					local stbl = {
 						Title = v.name,
 						Link = v.link,
 						AddedBy = v.addedby,
 						Date = tonumber(v.time)
-					})
+					}
+					if v.custom and v.custom ~= "" then
+						table.Merge(stbl, util.JSONToTable(v.custom))
+					end
+					table.insert(tbl, stbl)
 				end
 				callback(tbl)
 			end, nil, "SELECT * FROM %b", (wyozimc.DatabaseDetails.TablePrefix .. "media"))
@@ -37,6 +41,18 @@ if wyozimc.UseDatabaseStorage then
 			elseif action == "Remove" then
 				local tblentry = ({...})[2]
 				wyozimc.Database:Delete((wyozimc.DatabaseDetails.TablePrefix .. "media"), "link = %s AND time = %d", tblentry.Link, tblentry.Date)
+			else
+				-- Let's see if we were given an index
+				local idx = ({...})[1]
+				if idx and type(idx) == "number" then
+					local tblentry = tbl[idx]
+					local filteredentry = {}
+					for k,v in pairs(tblentry) do
+						if k == "Title" or k == "Link" or k == "AddedBy" or k == "Date" then continue end
+						filteredentry[k] = v
+					end
+					wyozimc.Database:Query(nil, nil, "UPDATE %b SET custom = %s", (wyozimc.DatabaseDetails.TablePrefix .. "media"), util.TableToJSON(filteredentry))
+				end
 			end
 		end,
 	}

@@ -14,7 +14,7 @@ function wyozimc.ConnectToDatabase(reconnect)
     	return
     end
 
-    db:Query(nil, nil, "CREATE TABLE IF NOT EXISTS  " .. dbdetails.TablePrefix .. "media (name TEXT, link TEXT, addedby TEXT, time INT)")
+    db:Query(nil, nil, "CREATE TABLE IF NOT EXISTS  " .. dbdetails.TablePrefix .. "media (name TEXT, link TEXT, addedby TEXT, time INT, custom TEXT)")
 
     wyozimc.Database = db
     wyozimc.Debug("Succesfully connected to database")
