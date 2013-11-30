@@ -166,13 +166,16 @@ end
 
 wyozimc.AllLines = {}
 
-function wyozimc.OpenGUI(playnetmsg, passent)
+function wyozimc.NewOpenGUI(data)
+
+	local playnetmsg = data.CustomNetMessage
+	local passent = data.CustomNetEntity
 
 	if IsValid(wyozimc.Gui) then
-		if wyozimc.Gui.PlayNetMsg == playnetmsg and wyozimc.Gui.PassEnt == passent then
+		--[[if wyozimc.Gui.PlayNetMsg == playnetmsg and wyozimc.Gui.PassEnt == passent then
 			wyozimc.Gui:Show()
 			return
-		end
+		end]]
 		wyozimc.Gui:Remove()
 	end
 
@@ -543,6 +546,12 @@ function wyozimc.OpenGUI(playnetmsg, passent)
 	frame:MakePopup()
 
 	wyozimc.RequestMediaListUpdate()
+end
+function wyozimc.OpenGUI(playnetmsg, passent)
+	wyozimc.NewOpenGUI({
+		CustomNetMessage = playnetmsg,
+		CustomNetEntity = passent
+	})
 end
 
 concommand.Add("wyozimc_open", function()
