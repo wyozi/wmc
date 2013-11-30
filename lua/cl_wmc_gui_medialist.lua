@@ -87,7 +87,7 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 	list:SetMultiSelect(false)
 	list.OnRowRightClick = function(panel, line)
 
-		local theurl = list:GetLine(line):GetValue(3)
+		local theurl = list:GetLine(line).OrigLink
 
 		local menu = DermaMenu()
 		menu:AddOption("Copy Link", function() SetClipboardText(theurl) end):SetIcon( "icon16/page_white_copy.png" )
@@ -149,6 +149,7 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 				end
 
 				local line = list:AddLine(gpnl, v.Title, info, v.AddedBy:Split("|", 2)[2], os.date("%c", tonumber(v.Date)))
+				line.OrigLink = v.Link
 
 				gpnl.Value = gpnl.IconList.GutterStr
 			end
