@@ -18,14 +18,24 @@ wyozimc.manip_meta = {
 			wyozimc.Debug("Not loading table to table manipulator with nil persist file")
 			return
 		end
-		self:SetTable(util.JSONToTable(file.Read(self.persist_file, "DATA") or "{}"))
+		if self.data_source then
+			self.data_source:Load(function(tbl)
+				self:SetTable(tbl)
+			end)
+		else
+			self:SetTable(util.JSONToTable(file.Read(self.persist_file, "DATA") or "{}"))
+		end
 	end,
 	Save = function(self, action, ...)
 		if not self.persist_file then
 			wyozimc.Debug("Not saving table manipulator with nil persist file")
 			return
 		end
-		file.Write(self.persist_file, util.TableToJSON(self.Table))
+		if self.data_source then
+			self.data_source:Save(self.Table, action, ...)
+		else
+			file.Write(self.persist_file, util.TableToJSON(self.Table))
+		end
 	end,
 	Add = function(self, newelement)
 		local idx = table.insert(self.Table, newelement)
@@ -48,11 +58,15 @@ wyozimc.manip_meta = {
 	end,
 	Remove = function(self, el)
 		local idx = table.RemoveByValue(self.Table, el)
-		self:Save("Remove", idx)
+		self:Save("Remove", idx, el)
 	end,
 	RemoveByUnique = function(self, uniq)
 		local idx = self:UniqueIndex(uniq)
-		if idx then table.remove(self.Table, idx) self:Save("Remove", idx) end
+		if idx then
+			local el = self.Table[idx]
+			table.remove(self.Table, idx)
+			self:Save("Remove", idx, el)
+		end
 	end,
 }
 
@@ -85,6 +99,7 @@ function wyozimc.CreateManipulator(settings)
 	tbl.persist_file = settings.persist_file
 	tbl.unique = settings.unique
 	tbl.Table = settings.table_reference
+	tbl.data_source = settings.data_source
 
 	tbl:Init()
 	return tbl

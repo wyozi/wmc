@@ -7,7 +7,42 @@ util.AddNetworkString("wyozimc_gui")
 
 wyozimc.MediaList = {}
 
-wyozimc.ServerMediaList = wyozimc.CreateManipulator{persist_file = "wyozimedia.txt", unique = "Link", table_reference = wyozimc.MediaList}
+local sql_data_source = nil
+
+if wyozimc.UseDatabaseStorage then
+	sql_data_source = {
+		Load = function(self, callback)
+			wyozimc.Database:Query(function(data)
+				local tbl = {}
+				for _,v in pairs(data) do
+					table.insert(tbl, {
+						Title = v.name,
+						Link = v.link,
+						AddedBy = v.addedby,
+						Date = tonumber(v.time)
+					})
+				end
+				callback(tbl)
+			end, nil, "SELECT * FROM %b", (wyozimc.DatabaseDetails.TablePrefix .. "media"))
+		end,
+		Save = function(self, tbl, action, ...)
+			if action == "Add" then
+				local tblentry = tbl[({...})[1]]
+				wyozimc.Database:Insert((wyozimc.DatabaseDetails.TablePrefix .. "media"), {
+					name = tblentry.Title,
+					link = tblentry.Link,
+					addedby = tblentry.AddedBy,
+					time = tblentry.Date
+				})
+			elseif action == "Remove" then
+				local tblentry = ({...})[2]
+				wyozimc.Database:Delete((wyozimc.DatabaseDetails.TablePrefix .. "media"), "link = %s AND time = %d", tblentry.Link, tblentry.Date)
+			end
+		end,
+	}
+end
+
+wyozimc.ServerMediaList = wyozimc.CreateManipulator{persist_file = "wyozimedia.txt", unique = "Link", table_reference = wyozimc.MediaList, data_source = sql_data_source}
 wyozimc.ServerMediaList:Load()
 
 function wyozimc.AddMedia(link, by)

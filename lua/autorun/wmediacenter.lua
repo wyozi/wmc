@@ -4,7 +4,7 @@ local wyozimc_debug = SERVER and CreateConVar("wyozimc_debug", "0") or CreateCli
 wyozimc = wyozimc or {}
 function wyozimc.Debug(...)
 	if not wyozimc_debug:GetBool() then return end
-	print("[WMZ-DEBUG] ", ...)
+	print("[WMC-DEBUG] ", ...)
 end
 function wyozimc.IsDebug()
 	return wyozimc_debug:GetBool()
@@ -27,6 +27,9 @@ end
 AddShared("sh_wmc_config.lua")
 AddShared("sh_wmc_utils.lua")
 AddShared("sh_wmc_tablemanip.lua")
+
+AddServer("sv_wmc_dbconfig.lua")
+AddServer("sv_wmc_dbconnector.lua")
 
 AddShared("sh_wmc_providers.lua")
 AddServer("sv_wmc_storage.lua")
