@@ -3,9 +3,11 @@
 function wyozimc.CreateGutterPanel(v)
 	local p = vgui.Create("DPanel")
 	p:SetDrawBackground(false)
+	p:SetMouseInputEnabled(false)
 
 	local dpl = p:Add("DPanelList")
 	dpl:EnableHorizontal(true)
+	dpl:SetMouseInputEnabled(false)
 	dpl:Dock(FILL)
 
 	dpl.GutterStr = ""
@@ -78,9 +80,9 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 	local list = vgui.Create("DListView")
 	list:AddColumn(""):SetMaxWidth(40)
 	list:AddColumn("Title")
-	list:AddColumn("Link")
+	list:AddColumn("Information"):SetMaxWidth(180)
 	list:AddColumn("Added By"):SetMaxWidth(128)
-	list:AddColumn("Date"):SetMaxWidth(128)
+	list:AddColumn("Date"):SetMaxWidth(100)
 	list:Dock(FILL)
 	list:SetMultiSelect(false)
 	list.OnRowRightClick = function(panel, line)
@@ -133,11 +135,21 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 
 		for i=1,#list.Lines do list:RemoveLine(i) end
 
-
 		table.foreach(wyozimc.AllLines, function(k, v)
 			if filter(v) then
 				local gpnl = wyozimc.CreateGutterPanel(v)
-				list:AddLine(gpnl, v.Title, v.Link, v.AddedBy:Split("|", 2)[2], os.date("%d.%m.%Y %H:%M", tonumber(v.Date)))
+
+				local info = ""
+				local provider, udata = wyozimc.FindProvider(v.Link)
+				if provider then
+					info = info .. provider.Name
+					if udata and udata.StartAt then
+						info = info .. "; Starts at " .. udata.StartAt .. " seconds"
+					end
+				end
+
+				local line = list:AddLine(gpnl, v.Title, info, v.AddedBy:Split("|", 2)[2], os.date("%c", tonumber(v.Date)))
+
 				gpnl.Value = gpnl.IconList.GutterStr
 			end
 		end)
