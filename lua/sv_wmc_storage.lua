@@ -61,6 +61,12 @@ end
 wyozimc.ServerMediaList = wyozimc.CreateManipulator{persist_file = "wyozimedia.txt", unique = "Link", table_reference = wyozimc.MediaList, data_source = sql_data_source}
 wyozimc.ServerMediaList:Load()
 
+if wyozimc.UseDatabaseStorage then
+	timer.Create("WyoziMCDBUpdater", 120, 0, function()
+		wyozimc.ServerMediaList:Load()
+	end)
+end
+
 function wyozimc.AddMedia(link, by)
 	link = link:Trim()
 	local media = wyozimc.GetMediaByLink(link)
