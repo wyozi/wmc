@@ -168,14 +168,12 @@ wyozimc.AllLines = {}
 
 function wyozimc.NewOpenGUI(data)
 
+	data = data or {}
+
 	local playnetmsg = data.CustomNetMessage
 	local passent = data.CustomNetEntity
 
 	if IsValid(wyozimc.Gui) then
-		--[[if wyozimc.Gui.PlayNetMsg == playnetmsg and wyozimc.Gui.PassEnt == passent then
-			wyozimc.Gui:Show()
-			return
-		end]]
 		wyozimc.Gui:Remove()
 	end
 
@@ -206,14 +204,6 @@ function wyozimc.NewOpenGUI(data)
 	listscrl.pnlCanvas:Dock(FILL) -- Hack hack hack, makes content pane fill the scrollpane
 
 	frame.MediaScroll = listscrl
-
-	--[[local oss = listscrl.VBar.SetScroll
-	listscrl.VBar.SetScroll = function(pself, offset)
-		oss(pself, offset)
-
-		wyozimc.GUI_LastListScroll = offset
-		MsgN(offset)
-	end]]
 
 	local list = vgui.Create("DListView")
 	list:AddColumn(""):SetMaxWidth(40)
@@ -273,19 +263,14 @@ function wyozimc.NewOpenGUI(data)
 
 		for i=1,#list.Lines do list:RemoveLine(i) end
 
-		local last
 
 		table.foreach(wyozimc.AllLines, function(k, v)
 			if filter(v) then
 				local gpnl = CreateGutterPanel(v)
-				last = list:AddLine(gpnl, v.Title, v.Link, v.AddedBy:Split("|", 2)[2], os.date("%d.%m.%Y %H:%M", tonumber(v.Date)))
+				list:AddLine(gpnl, v.Title, v.Link, v.AddedBy:Split("|", 2)[2], os.date("%d.%m.%Y %H:%M", tonumber(v.Date)))
 				gpnl.Value = gpnl.IconList.GutterStr
 			end
 		end)
-
-		if last then
-			--listscrl:ScrollToChild(last)
-		end
 
 		wyozimc.CallHook("WyoziMCListUpdated", wyozimc.AllLines)
 	end
@@ -378,28 +363,6 @@ function wyozimc.NewOpenGUI(data)
 				addnewbtn.DoClick = SendAddData
 
 				addnewentry.OnEnter = SendAddData
-
-				--[[do
-					local luckbtn = vgui.Create("DButton")
-					luckbtn.Paint = PaintGreenButton
-					luckbtn:SetText("I'm Feeling Lucky")
-					luckbtn:SetSize(95, 23)
-					luckbtn:DockMargin(4, 10, 0, 0)
-
-					btnpanels:AddItem(luckbtn)
-
-					luckbtn.DoClick = function()
-						wyozimc.SearchYoutube(addnewentry:GetText(), function(theurl)
-							net.Start("wyozimc_edit")
-								net.WriteString("add")
-								net.WriteString(theurl)
-							net.SendToServer()
-						end)
-
-						addnewentry:SetText("")
-						addnewentry.OnTextChanged(addnewentry) -- Force call this to update provider to zero
-					end
-				end]]
 			end
 
 			if permission_playall or playnetmsg then
@@ -515,18 +478,6 @@ function wyozimc.NewOpenGUI(data)
 		end
 
 		local volslider = frame:Add("DNumSlider")
-		local op = volslider.Paint
-		--[[
-		volslider.Paint = function(pself, w, h)
-			surface.SetDrawColor(50, 50, 50, 100)
-
-			surface.DrawRect(0, h-1, w, 1)
-			for i=0,10 do
-				local f = w/10*i
-				surface.DrawRect(i > 0 and f-1 or f, h-5, 1, 5)
-			end
-			op(pself, w, h)
-		end]]
 		volslider:SetPos(titlex, 4)
 		volslider:SetSize(150, 18)
 		volslider:SetConVar("wyozimc_volume")
@@ -547,7 +498,10 @@ function wyozimc.NewOpenGUI(data)
 
 	wyozimc.RequestMediaListUpdate()
 end
+
+-- Deprecated! Use wyozimc.NewOpenGUI
 function wyozimc.OpenGUI(playnetmsg, passent)
+	wyozimc.Debug("Note: Deprecated wyozimc.OpenGUI called from somewhere. Use wyozimc.NewOpenGUI!")
 	wyozimc.NewOpenGUI({
 		CustomNetMessage = playnetmsg,
 		CustomNetEntity = passent
@@ -555,7 +509,7 @@ function wyozimc.OpenGUI(playnetmsg, passent)
 end
 
 concommand.Add("wyozimc_open", function()
-	wyozimc.OpenGUI()
+	wyozimc.NewOpenGUI({})
 end)
 
 concommand.Add("wyozimc_delcache", function()
@@ -580,13 +534,6 @@ net.Receive("wyozimc_list", function()
 
 	wyozimc.Gui.UpdateList(function() return true end)
 
-	--[[if wyozimc.DeferredScrollDown then
-		wyozimc.DeferredScrollDown = false
-		local vbar = wyozimc.Gui.MediaScroll.VBar
-
-		vbar:AddScroll(10000)
-	end]]
-
 	wyozimc.Debug("Received new AllLines list #", #wyozimc.AllLines, " emptyold ", emptyold)
 end)
 
@@ -599,9 +546,15 @@ net.Receive("wyozimc_edit", function()
 end)
 
 net.Receive("wyozimc_gui", function()
-	local bit = net.ReadBit() == 1
-	if bit then wyozimc.OpenGUI(net.ReadString(), net.ReadEntity())
-	else wyozimc.OpenGUI() end
+	local for_custom_player = net.ReadBit() == 1 -- If we're not the list for the default F9 openable player
+	if for_custom_player then
+		wyozimc.NewOpenGUI({
+			CustomNetMessage = net.ReadString(),
+			CustomNetEntity = net.ReadEntity()
+		})
+	else
+		wyozimc.NewOpenGUI({})
+	end
 end)
 
 function wyozimc.HKThink()
