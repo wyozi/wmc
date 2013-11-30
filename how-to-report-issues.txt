@@ -1,0 +1,3 @@
+While you can use CoderHire to send me a PM with your issue, it's a lot easier for me if you use the issue tracker at https://github.com/wyozi/wmc/issues.
+
+This also means it's a lot more likely that your issue gets fixed, because github allows me to easily see what issues there are left to fix.
