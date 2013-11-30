@@ -10,8 +10,8 @@ No. People who know how to get the repository version to work properly probably 
 
 ## What's the license for WMC?
 
-At the moment there is no license. Please see http://choosealicense.com/no-license/ for what this actually means. In a nutshell I will not accept any pull requests.
+At the moment there is no license. Please see http://choosealicense.com/no-license/ for what this actually means. In a nutshell I will not accept any pull requests and you should not use the code in anything you release without explicit permission from me.
 
 ## What can I use the issue tracker for?
 
-**Bugs** in code and suggestions. If you report an issue that has nothing to do with code, but is something related to problems in installation etc, I will close the issue. Please buy the script on CoderHire and contact me directly, if you have problems with something like that.
+**Bugs** in code and suggestions. If you report an issue that has nothing to do with code, but is something related to problems in installation etc, I will close the issue. Please buy the script on CoderHire and contact me directly, if you want support for something like that.
