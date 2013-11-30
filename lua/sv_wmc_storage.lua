@@ -182,33 +182,41 @@ end)
 net.Receive("wyozimc_list", function(le, cl)
 	-- TODO throttle send
 
-	local medialist = wyozimc.MediaList
+	local crcd = net.ReadString()
 
+	local medialist = wyozimc.MediaList
 	local mediacount = #medialist
 
-	local iteration_size = 300
-	local iterations = math.max(1, math.ceil(mediacount / iteration_size))
+	local start = RealTime()
+	local crcdlist = util.CRC(util.TableToJSON(medialist))
+	wyozimc.Debug("CRCing media list of " .. mediacount .. " took " .. (RealTime() - start))
 
-	wyozimc.Debug("MediaCount: ", mediacount, " Iterations: ", iterations)
+	wyozimc.Debug("ServerMediaList CRC: " .. crcdlist .. "; Received client CRC: " .. crcd)
 
-	for i=0, (iterations-1) do
-		local from_index = (i * iteration_size) + 1
-		local to_index = math.min(from_index + iteration_size, ((i + 1) * iteration_size))
-		local tablefragment = {unpack(medialist, from_index, to_index)}
+	if crcd ~= crcdlist then
 
-		wyozimc.Debug("Sending iteration #", i, " which is from ", from_index, " to ", to_index, " (realsize ", #tablefragment, ")")
+		local iteration_size = 300
+		local iterations = math.max(1, math.ceil(mediacount / iteration_size))
 
-		net.Start("wyozimc_list")
-			net.WriteBit(i == 0) -- ShouldEmptyPrevious
-			net.WriteTable(tablefragment)
-			wyozimc.Debug("Iteration #", i, " bytecount: ", net.BytesWritten())
-		net.Send(cl)
+		wyozimc.Debug("MediaCount: ", mediacount, " Iterations: ", iterations)
+
+		for i=0, (iterations-1) do
+			local from_index = (i * iteration_size) + 1
+			local to_index = math.min(from_index + iteration_size, ((i + 1) * iteration_size))
+			local tablefragment = {unpack(medialist, from_index, to_index)}
+
+			wyozimc.Debug("Sending iteration #", i, " which is from ", from_index, " to ", to_index, " (realsize ", #tablefragment, ")")
+
+			net.Start("wyozimc_list")
+				net.WriteBit(i == 0) -- ShouldEmptyPrevious
+				net.WriteTable(tablefragment)
+				wyozimc.Debug("Iteration #", i, " bytecount: ", net.BytesWritten())
+			net.Send(cl)
+		end
+		
+	else
+		wyozimc.Debug("We got a CRC match! Not sending the list again")
 	end
-
-	--[[net.Start("wyozimc_list")
-		net.WriteBit(1) -- ShouldEmptyPrevious
-		net.WriteTable(medialist)
-	net.Send(cl)]]
 
 	wyozimc.CallHook("WyoziMCUpdateRequested", cl)
 end)

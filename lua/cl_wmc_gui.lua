@@ -154,6 +154,16 @@ function wyozimc.AddPlayContextOptions(menu, frame, theurl, playnetmsg, passent,
 	end
 end
 
+function wyozimc.RequestMediaListUpdate()
+	net.Start("wyozimc_list") -- Request list
+		if wyozimc.GuiMediaCache then
+			net.WriteString(util.CRC(util.TableToJSON(wyozimc.GuiMediaCache)))
+		else
+			net.WriteString("")
+		end
+	net.SendToServer()
+end
+
 wyozimc.AllLines = {}
 
 function wyozimc.OpenGUI(playnetmsg, passent)
@@ -532,8 +542,7 @@ function wyozimc.OpenGUI(playnetmsg, passent)
 
 	frame:MakePopup()
 
-	net.Start("wyozimc_list") -- Request list
-	net.SendToServer()
+	wyozimc.RequestMediaListUpdate()
 end
 
 concommand.Add("wyozimc_open", function()
@@ -576,8 +585,7 @@ net.Receive("wyozimc_edit", function()
 	local tt = net.ReadString()
 
 	if tt == "requpd" and IsValid(wyozimc.Gui) then
-		net.Start("wyozimc_list") -- Request list
-		net.SendToServer()
+		wyozimc.RequestMediaListUpdate()
 	end
 end)
 
