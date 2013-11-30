@@ -1,15 +1,22 @@
 
+local raw_patterns = {
+	"^https?://[A-Za-z0-9%.%-]*%.?youtu%.be/([A-Za-z0-9_%-]+)",
+    "^https?://[A-Za-z0-9%.%-]*%.?youtube%.com/watch%?.*v=([A-Za-z0-9_%-]+)",
+    "^https?://[A-Za-z0-9%.%-]*%.?youtube%.com/v/([A-Za-z0-9_%-]+)",
+}
+
+local all_patterns = {}
+
+-- Appends time modifier patterns to each pattern
+for _,p in pairs(raw_patterns) do
+	table.insert(all_patterns, p .. "#t=(%d+)m(%d+)s")
+	table.insert(all_patterns, p .. "#t=(%d+)")
+	table.insert(all_patterns, p)
+end
+
 wyozimc.AddProvider({
 	Name = "Youtube",
-	UrlPatterns = {
-    	"^https?://youtu%.be/([A-Za-z0-9_%-]+)",
-    	"^https?://youtube%.com/watch%?.*v=([A-Za-z0-9_%-]+)",
-    	"^https?://[A-Za-z0-9%.%-]*%.youtube%.com/watch%?.*v=([A-Za-z0-9_%-]+)#t=(%d+)",
-    	"^https?://[A-Za-z0-9%.%-]*%.youtube%.com/watch%?.*v=([A-Za-z0-9_%-]+)",
-    	"^https?://[A-Za-z0-9%.%-]*%.youtube%.com/v/([A-Za-z0-9_%-]+)",
-    	"^https?://youtube%-nocookie%.com/watch%?.*v=([A-Za-z0-9_%-]+)",
-    	"^https?://[A-Za-z0-9%.%-]*%.youtube%-nocookie%.com/watch%?.*v=([A-Za-z0-9_%-]+)",
-	},
+	UrlPatterns = all_patterns,
 	QueryMeta = function(data, callback, failCallback)
 		local uri = data.Matches[1]
 	    
@@ -56,7 +63,9 @@ wyozimc.AddProvider({
 		end
 	end,
 	ParseUData = function(udata)
-		if udata.Matches[2] then
+		if udata.Matches[2] and udata.Matches[3] then -- Minutes and seconds
+			udata.StartAt = math.Round(tonumber(udata.Matches[2])) * 60 + math.Round(tonumber(udata.Matches[3]))
+		elseif udata.Matches[2] then -- Seconds
 			udata.StartAt = math.Round(tonumber(udata.Matches[2]))
 		end
 	end,
