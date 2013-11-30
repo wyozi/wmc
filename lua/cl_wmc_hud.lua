@@ -93,9 +93,9 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 
 	surface.SetFont("Trebuchet18")
 
-	local t = wyozimc.FormatSimpleTime(elapsed, "%02i:%02i")
+	local t = wyozimc.FormatTime(elapsed)
 	if qd.Duration and qd.Duration ~= -1 then
-		t = t .. " / " .. wyozimc.FormatSimpleTime(qd.Duration, "%02i:%02i")
+		t = t .. " / " .. wyozimc.FormatTime(qd.Duration)
 	end
 	local ts = surface.GetTextSize(t)
 	surface.SetTextPos(w/2 - ts/2, progressbary-1)

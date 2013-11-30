@@ -40,7 +40,7 @@ function wyozimc.HasPermission(ply, permission)
 	return false
 end
 
-function wyozimc.FormatSimpleTime(total_seconds, fmt)
+function wyozimc.FormatTime(total_seconds)
 	if not total_seconds then total_seconds = 0 end
 
 	local ms = (total_seconds - math.floor(total_seconds)) * 100
@@ -48,8 +48,13 @@ function wyozimc.FormatSimpleTime(total_seconds, fmt)
 	local s = total_seconds % 60
 	total_seconds = (total_seconds - s) / 60
 	local m = total_seconds % 60
+	total_seconds = (total_seconds - m) / 60
+	local h = total_seconds % 60
 
-	return string.format(fmt, m, s, ms)
+	if h > 0 then
+		return string.format("%02i:%02i:%02i", h, m, s)
+	end
+	return string.format("%02i:%02i", m, s, ms)
 end
 
 if SERVER then
