@@ -28,36 +28,36 @@ end
 
 -- Not sure what this does but some black magic for sure
 function wyozimc.JSEscape(str)
-    return str:gsub("\\", "\\\\"):gsub("\"", "\\\""):gsub("\'", "\\'")
-        :gsub("\r", "\\r"):gsub("\n", "\\n")
+	return str:gsub("\\", "\\\\"):gsub("\"", "\\\""):gsub("\'", "\\'")
+		:gsub("\r", "\\r"):gsub("\n", "\\n")
 end
 
 function wyozimc.URLEscape(s)
-    s = tostring(s)
-    local new = ""
-    
-    for i = 1, #s do
-        local c = s:sub(i, i)
-        local b = c:byte()
-        if (b >= 65 and b <= 90) or (b >= 97 and b <= 122) or
-            (b >= 48 and b <= 57) or
-            c == "_" or c == "." or c == "~" then
-            new = new .. c
-        else
-            new = new .. string.format("%%%X", b)
-        end
-    end
-    
-    return new
+	s = tostring(s)
+	local new = ""
+	
+	for i = 1, #s do
+		local c = s:sub(i, i)
+		local b = c:byte()
+		if (b >= 65 and b <= 90) or (b >= 97 and b <= 122) or
+			(b >= 48 and b <= 57) or
+			c == "_" or c == "." or c == "~" then
+			new = new .. c
+		else
+			new = new .. string.format("%%%X", b)
+		end
+	end
+	
+	return new
 end
 
 
 function wyozimc.URLUnEscape(str)
-    return str:gsub("%%([A-Fa-f0-9][A-Fa-f0-9])", function(m)
-        local n = tonumber(m, 16)
-        if not n then return "" end -- Not technically required
-        return string.char(n)
-    end)
+	return str:gsub("%%([A-Fa-f0-9][A-Fa-f0-9])", function(m)
+		local n = tonumber(m, 16)
+		if not n then return "" end -- Not technically required
+		return string.char(n)
+	end)
 end
 
 for _,fil in pairs(file.Find("wmcproviders/*.lua", "LUA")) do

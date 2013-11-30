@@ -2,12 +2,12 @@
 wyozimc.AddProvider({
 	Name = "MP4 Player",
 	UrlPatterns = {
-    	"^https?://(.*)%.mp4",
+		"^https?://(.*)%.mp4",
 	},
 	QueryMeta = function(data, callback, failCallback)
 		callback({
-        	Title = data.WholeUrl:match( "([^/]+)$" )
-        })
+			Title = data.WholeUrl:match( "([^/]+)$" )
+		})
 	end,
 	SetHTML = function(data, url)
 		return [[<!DOCTYPE html><html><body>
@@ -22,7 +22,7 @@ wyozimc.AddProvider({
 			document.getElementById("thevideo").currentTime = seconds;
 		}
 		document.getElementById("thevideo").addEventListener("loadedmetadata", function() {
-		     this.currentTime = ]] .. tostring(math.Round(data.StartAt or 0 * 1000)) .. [[;
+			 this.currentTime = ]] .. tostring(math.Round(data.StartAt or 0 * 1000)) .. [[;
 		}, false);
 	</script>
 </body></html>]]

@@ -4,20 +4,20 @@ function wyozimc.ConnectToDatabase(reconnect)
 
 	local dbdetails = wyozimc.DatabaseDetails
 	local db, err = FDB.NewConnect("mysqloo", {
-        host = dbdetails.Host,
-        name = dbdetails.User,
-        password = dbdetails.Password,
-        database = dbdetails.Database
-    })
-    if not db then
-    	ErrorNoHalt("[WMC-ERROR] Failed to connect to database\n")
-    	return
-    end
+		host = dbdetails.Host,
+		name = dbdetails.User,
+		password = dbdetails.Password,
+		database = dbdetails.Database
+	})
+	if not db then
+		ErrorNoHalt("[WMC-ERROR] Failed to connect to database\n")
+		return
+	end
 
-    db:Query(nil, nil, "CREATE TABLE IF NOT EXISTS  " .. dbdetails.TablePrefix .. "media (name TEXT, link TEXT, addedby TEXT, time INT, custom TEXT)")
+	db:Query(nil, nil, "CREATE TABLE IF NOT EXISTS  " .. dbdetails.TablePrefix .. "media (name TEXT, link TEXT, addedby TEXT, time INT, custom TEXT)")
 
-    wyozimc.Database = db
-    wyozimc.Debug("Succesfully connected to database")
+	wyozimc.Database = db
+	wyozimc.Debug("Succesfully connected to database")
 end
 
 wyozimc.ConnectToDatabase()

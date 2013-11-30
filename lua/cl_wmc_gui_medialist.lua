@@ -24,28 +24,28 @@ end
 function wyozimc.SearchYoutube(q, callback)
 	local url = "https://gdata.youtube.com/feeds/api/videos?max-results=1&v=2&alt=json&q=" .. wyozimc.URLEscape(q)
 
-    http.Fetch(url, function(result, size)
-        if size == 0 then
-            failCallback("HTTP request failed (size = 0)")
-            return
-        end
+	http.Fetch(url, function(result, size)
+		if size == 0 then
+			failCallback("HTTP request failed (size = 0)")
+			return
+		end
 
-        local feed = util.JSONToTable(result)
-        if not feed or not feed.feed then
-        	LocalPlayer():ChatPrint("Failed to load youtube data.")
-        	return
-        end
+		local feed = util.JSONToTable(result)
+		if not feed or not feed.feed then
+			LocalPlayer():ChatPrint("Failed to load youtube data.")
+			return
+		end
 
-        feed = feed.feed
+		feed = feed.feed
 
-        if not feed.entry or #feed.entry == 0 then
-        	LocalPlayer():ChatPrint("Zero results were returned by youtube. Try a more general search term.")
-        	return
-        end
+		if not feed.entry or #feed.entry == 0 then
+			LocalPlayer():ChatPrint("Zero results were returned by youtube. Try a more general search term.")
+			return
+		end
 
-        callback(feed.entry[1].link[1].href)
+		callback(feed.entry[1].link[1].href)
 
-    end)
+	end)
 end
 
 -- Tried to find a provider for the given string. If no provider was found, tries to search from youtube

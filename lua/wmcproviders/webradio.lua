@@ -1,13 +1,13 @@
 wyozimc.AddProvider({
 	Name = "Online Radio",
 	UrlPatterns = {
-    	"^https?://(.*)%.pls"
+		"^https?://(.*)%.pls"
 	},
 	QueryMeta = function(data, callback, failCallback)
 		callback({
-        	Title = data.WholeUrl:match( "([^/]+)$" ),
-        	Duration = -1 -- streaming
-        })
+			Title = data.WholeUrl:match( "([^/]+)$" ),
+			Duration = -1 -- streaming
+		})
 	end,
 	TranslateUrl = function(data, callback)
 		callback(data.WholeUrl)
