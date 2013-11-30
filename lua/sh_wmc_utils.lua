@@ -40,6 +40,18 @@ function wyozimc.HasPermission(ply, permission)
 	return false
 end
 
+function wyozimc.FormatSimpleTime(total_seconds, fmt)
+	if not total_seconds then total_seconds = 0 end
+
+	local ms = (total_seconds - math.floor(total_seconds)) * 100
+	total_seconds = math.floor(total_seconds)
+	local s = total_seconds % 60
+	total_seconds = (total_seconds - s) / 60
+	local m = total_seconds % 60
+
+	return string.format(fmt, m, s, ms)
+end
+
 if SERVER then
 	util.AddNetworkString("wyozimc_chat")
 	function wyozimc.ChatText(ply, ...)
