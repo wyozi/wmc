@@ -1,8 +1,9 @@
 
 wyozimc.AddProvider({
-	Name = "MP4 Player",
+	Name = "MP4/FLV Player",
 	UrlPatterns = {
 		"^https?://(.*)%.mp4",
+		"^https?://(.*)%.flv",
 	},
 	QueryMeta = function(data, callback, failCallback)
 		callback({
@@ -10,22 +11,36 @@ wyozimc.AddProvider({
 		})
 	end,
 	SetHTML = function(data, url)
-		return [[<!DOCTYPE html><html><body>
-	<video width="100%" height="100%" id="thevideo" autoplay>
-		<source src="]] .. url .. [[" type="video/mp4">
-	</video> 
+		local startat = (data.StartAt or 0)
+		local hotomolo = [[<!DOCTYPE html><html><head>
+<script src="http://releases.flowplayer.org/js/flowplayer-3.2.12.min.js"></script>
+</head><body>
+<a style="display:block;width:100%;height:94%;"
+    id="player">
+</a>
 	<script type="text/javascript">
+		flowplayer("player", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {
+			plugins: {
+				controls: null
+			},
+			playlist: [
+				{
+					url: "]] .. url .. [[",
+					start: ]] .. startat .. [[
+				}
+			],
+    		replayLabel: 'Finished'
+		});
+
 		function setVideoVolume(vol) {
-			document.getElementById("thevideo").volume = vol;
+			flowplayer().setVolume(vol);
 		}
 		function seekVideo(seconds) {
-			document.getElementById("thevideo").currentTime = seconds;
+			flowplayer().seek(seconds);
 		}
-		document.getElementById("thevideo").addEventListener("loadedmetadata", function() {
-			 this.currentTime = ]] .. tostring(math.Round(data.StartAt or 0 * 1000)) .. [[;
-		}, false);
 	</script>
 </body></html>]]
+		return hotomolo
 	end,
 	FuncSetVolume = function(volume)
 		return "setVideoVolume(" .. tostring(volume) .. ")"
