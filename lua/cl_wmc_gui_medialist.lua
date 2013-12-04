@@ -210,8 +210,17 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 					surface.DrawText("http://www.youtube.com/watch?v=")
 				end
 				surface.SetDrawColor(255, 255, 255, 255)
-				surface.SetMaterial(Material(pself.UrlProvider and "icon16/accept.png" or "icon16/cancel.png"))
-				surface.DrawTexturedRect(w-20, 4, 16, 16)
+
+				local is_empty = pself:GetText():Trim() == ""
+
+				surface.SetMaterial(Material(is_empty and "icon16/cancel.png" or "icon16/accept.png"))
+				surface.DrawTexturedRect(w-(is_empty and 20 or 25), 4, 16, 16)
+
+				if pself.UrlProvider or not is_empty then
+					surface.SetMaterial(Material(pself.UrlProvider and "icon16/webcam.png" or "icon16/magnifier.png"))
+					surface.DrawTexturedRect(w-11, 13, 8, 8)
+				end
+
 			end
 			addnewentry.OnTextChanged = function(self)
 				self.UrlProvider = wyozimc.FindProvider(self:GetText())
@@ -226,6 +235,9 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 				addnewbtn:SetSize(75, 23)
 				addnewbtn:DockMargin(4, 10, 0, 0)
 				btnpanels:AddItem(addnewbtn)
+				addnewbtn.Think = function(pself)
+					pself:SetDisabled(addnewentry:GetText():Trim() == "")
+				end
 
 				local function SendAddData()
 					local state, err = wyozimc.FindURL(addnewentry:GetText(), function(link)
@@ -257,6 +269,10 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 				playnowbtn:SetSize(75, 23)
 				playnowbtn:DockMargin(4, 10, 0, 0)
 				btnpanels:AddItem(playnowbtn)
+
+				playnowbtn.Think = function(pself)
+					pself:SetDisabled(addnewentry:GetText():Trim() == "")
+				end
 
 				local function PlayNowData()
 					local state, err = wyozimc.FindURL(addnewentry:GetText(), function(link)

@@ -44,7 +44,6 @@ AddClient("cl_wmc_gui_settings.lua")
 AddClient("cl_wmc_hud.lua")
 AddClient("cl_wmc_toolmenu.lua")
 
-
 wyozimc.IsInitialized = true
 
 wyozimc.CallHook("WyoziMCInitialized")

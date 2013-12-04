@@ -5,6 +5,8 @@ local frame_title_background = Color(0, 50, 0, 200)
 
 local btn_green = Color(0, 190, 0, 160)
 local btn_green_hovered = Color(20, 220, 20, 160)
+local btn_green_disabled = Color(100, 160, 100, 160)
+local btn_green_disabled_hovered = Color(120, 180, 120, 160)
 
 local clr_black = Color(0, 0, 0)
 
@@ -34,17 +36,31 @@ function wyozimc.PaintFrame(pself, w, h)
 	end
 end
 
-function wyozimc.PaintGreenButton(pself, w, h)
-	surface.SetDrawColor(pself.Hovered and btn_green_hovered or btn_green)
-	surface.DrawRect(0, 0, w, h)
+function wyozimc.CreateButtonPainter(datatbl)
+	datatbl = datatbl or {}
+	return function(pself, w, h)
+		if pself:GetDisabled() then
+			surface.SetDrawColor(datatbl.disabled_clr or btn_green_disabled)
+		elseif pself.Hovered then
+			surface.SetDrawColor(datatbl.hovered_clr or btn_green_hovered)
+		else
+			surface.SetDrawColor(datatbl.clr or btn_green)
+		end
+		surface.DrawRect(0, 0, w, h)
 
-	surface.SetDrawColor(clr_black)
-	surface.DrawOutlinedRect(0, 0, w, h)
+		surface.SetDrawColor(datatbl.outline_clr or clr_black)
+		surface.DrawOutlinedRect(0, 0, w, h)
 
-	draw.SimpleText(pself:GetText(), "DermaDefault", w/2, h/2, clr_black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		draw.SimpleText(pself:GetText(), "DermaDefault", w/2, h/2,
+			(pself:GetDisabled()) and (Color(200, 200, 200, 100)) or (datatbl.text_clr or clr_black)
+			, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-	return true
+		return true
+	end
 end
+
+-- DEPRECATED!
+wyozimc.PaintGreenButton = wyozimc.CreateButtonPainter()
 
 function wyozimc.AddPlayContextOptions(menu, frame, theurl, playnetmsg, passent, playflags)
 	playflags = playflags or 0
