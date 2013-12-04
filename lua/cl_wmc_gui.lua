@@ -62,6 +62,34 @@ end
 -- DEPRECATED!
 wyozimc.PaintGreenButton = wyozimc.CreateButtonPainter()
 
+function wyozimc.AddSimplePlayContextOptions(menu, theurl, playflags)
+	playflags = playflags or 0
+	menu:AddOption("Play", function()
+		local nflags = bit.bor(playflags, wyozimc.FLAG_PLAYING_CLIENTSIDE)
+		wyozimc.PlayUrl(theurl, _, nflags).done(function(qdata)
+			wyozimc.ChatText(Color(255, 127, 0), "[MediaPlayer] ", Color(255, 255, 255), "Playing ", Color(252, 84, 84), qdata.Title or theurl, Color(255, 255, 255), " locally.")
+		end)
+	end):SetIcon( "icon16/music.png" )
+
+	if wyozimc.HasPermission(LocalPlayer(), "PlayAll") then
+		menu:AddOption("Play for All", function()
+			net.Start("wyozimc_play") net.WriteString(theurl) net.SendToServer()
+		end):SetIcon( "icon16/control_play.png" )
+
+		local csubmenu, csmpnl = menu:AddSubMenu("Play For", function() end)
+		csmpnl:SetIcon( "icon16/user_comment.png" )
+
+		for _,ply in pairs(player.GetAll()) do
+			local opt = csubmenu:AddOption(ply:Nick(), function()
+				net.Start("wyozimc_playply")
+					net.WriteEntity(ply)
+					net.WriteString(theurl)
+				net.SendToServer()
+			end)
+		end
+	end
+end
+
 function wyozimc.AddPlayContextOptions(menu, frame, theurl, playnetmsg, passent, playflags)
 	playflags = playflags or 0
 
@@ -73,32 +101,7 @@ function wyozimc.AddPlayContextOptions(menu, frame, theurl, playnetmsg, passent,
 			end):SetIcon( "icon16/music.png" )
 		end
 	else
-
-		menu:AddOption("Play", function()
-			local nflags = bit.bor(playflags, wyozimc.FLAG_PLAYING_CLIENTSIDE)
-			wyozimc.PlayUrl(theurl, _, nflags).done(function(qdata)
-				wyozimc.ChatText(Color(255, 127, 0), "[MediaPlayer] ", Color(255, 255, 255), "Playing ", Color(252, 84, 84), qdata.Title or theurl, Color(255, 255, 255), " locally.")
-			end)
-		end):SetIcon( "icon16/music.png" )
-
-		if wyozimc.HasPermission(LocalPlayer(), "PlayAll") then
-			menu:AddOption("Play for All", function()
-				net.Start("wyozimc_play") net.WriteString(theurl) net.SendToServer()
-			end):SetIcon( "icon16/control_play.png" )
-
-			local csubmenu, csmpnl = menu:AddSubMenu("Play For", function() end)
-			csmpnl:SetIcon( "icon16/user_comment.png" )
-
-			for _,ply in pairs(player.GetAll()) do
-				local opt = csubmenu:AddOption(ply:Nick(), function()
-					net.Start("wyozimc_playply")
-						net.WriteEntity(ply)
-						net.WriteString(theurl)
-					net.SendToServer()
-				end)
-			end
-		end
-
+		wyozimc.AddSimplePlayContextOptions(menu, theurl, playflags)
 	end
 end
 

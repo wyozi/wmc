@@ -274,29 +274,39 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 					pself:SetDisabled(addnewentry:GetText():Trim() == "")
 				end
 
-				local function PlayNowData()
+				local function PlayNowData(rightclick)
 					local state, err = wyozimc.FindURL(addnewentry:GetText(), function(link)
-						if playnetmsg then
-							net.Start(playnetmsg)
-								net.WriteString(link)
-								net.WriteEntity(passent)
-							net.SendToServer()
+						if rightclick then
+							local menu = DermaMenu()
+							wyozimc.AddPlayContextOptions(menu, frame, link, playnetmsg, passent, playflags)
+							menu:Open()
 						else
-							net.Start("wyozimc_play")
-								net.WriteString(link)
-							net.SendToServer()
+							if playnetmsg then
+								net.Start(playnetmsg)
+									net.WriteString(link)
+									net.WriteEntity(passent)
+								net.SendToServer()
+							else
+								net.Start("wyozimc_play")
+									net.WriteString(link)
+								net.SendToServer()
+							end
 						end
+
+						addnewentry:SetText("")
+						addnewentry.OnTextChanged(addnewentry) -- Force call this to update provider to zero
 					end)
 
 					if not state then
 						LocalPlayer():ChatPrint(tostring(err))
-					end
 
-					addnewentry:SetText("")
-					addnewentry.OnTextChanged(addnewentry) -- Force call this to update provider to zero
+						addnewentry:SetText("")
+						addnewentry.OnTextChanged(addnewentry) -- Force call this to update provider to zero
+					end
 				end
 
 				playnowbtn.DoClick = PlayNowData
+				playnowbtn.DoRightClick = function() PlayNowData(true) end
 
 				if not permission_add then
 					addnewentry.OnEnter = PlayNowData
