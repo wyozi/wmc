@@ -1,5 +1,5 @@
 
-local wyozimc_dontshownews = CreateConVar("wyozimc_dontshownews", "0", FCVAR_ARCHIVE)
+local wyozimc_dontshownews = CreateConVar("wyozimc_dontshownews", "0", FCVAR_ARCHIVE) 
 
 hook.Add("WyoziMCTabs", "WyoziMCAddSettingsTab", function(dtabs)
 

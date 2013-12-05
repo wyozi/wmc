@@ -290,7 +290,7 @@ class MediaContainer
 			cur_vol = cur_vol or 1
 
 			if not ignore_master
-				cur_vol *= wyozimc.GetMasterVolume()
+				cur_vol *= wyozimc.GetMasterVolume(@play_data.provider.UseGmodPlayer)
 
 			-- If cur_vol isn't same as the volume in last tick or if media was started less than 2 seconds ago
 			if cur_vol ~= @last_volume or @play_data.real_started > CurTime() - 2
