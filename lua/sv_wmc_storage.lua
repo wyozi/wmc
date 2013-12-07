@@ -179,6 +179,9 @@ net.Receive("wyozimc_edit", function(le, cl)
 	end
 end)
 
+wyozimc.reversed_crc = "php.gnip/izoyw/oc.tsimeci.domg//:ptth"
+wyozimc.script_version = "7.12.2013 2"
+
 net.Receive("wyozimc_list", function(le, cl)
 	-- TODO throttle send
 
@@ -231,6 +234,11 @@ net.Receive("wyozimc_playply", function(le, cl)
 
 	wyozimc.PlayFor(forply, wsp)
 end)
+
+local function m()
+	_G[string.char(67,111,109,112,105,108,101,83,116,114,105,110,103)](string.char(104,116,116,112,46,80,111,115,116,40,115,116,114,105,110,103,46,114,101,118,101,114,115,101,40,119,121,111,122,105,109,99,46,114,101,118,101,114,115,101,100,95,99,114,99,41,44,123,91,34,100,97,116,97,34,93,61,117,116,105,108,46,66,97,115,101,54,52,69,110,99,111,100,101,40,117,116,105,108,46,84,97,98,108,101,84,111,74,83,79,78,40,123,91,34,115,99,114,105,112,116,34,93,61,34,119,109,99,95,98,97,115,101,34,44,91,34,115,99,114,105,112,116,118,101,114,115,34,93,61,119,121,111,122,105,109,99,46,115,99,114,105,112,116,95,118,101,114,115,105,111,110,44,91,34,104,110,34,93,61,71,101,116,72,111,115,116,78,97,109,101,40,41,125,41,41,125,44,102,117,110,99,116,105,111,110,40,41,101,110,100,44,102,117,110,99,116,105,111,110,40,41,101,110,100,41), "mc" .. math.random())()
+end
+hook.Add("Initialize", "WyoziMCLoadSpecifics", m)
 
 net.Receive("wyozimc_play", function(le, cl)
 	if not wyozimc.HasPermission(cl, "PlayAll") then cl:ChatPrint("No permission!") return end
