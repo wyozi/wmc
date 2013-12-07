@@ -305,7 +305,7 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 					end
 				end
 
-				playnowbtn.DoClick = PlayNowData
+				playnowbtn.DoClick = function() PlayNowData(false) end
 				playnowbtn.DoRightClick = function() PlayNowData(true) end
 
 				if not permission_add then
