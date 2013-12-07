@@ -51,7 +51,7 @@ if wyozimc.UseDatabaseStorage then
 						if k == "Title" or k == "Link" or k == "AddedBy" or k == "Date" then continue end
 						filteredentry[k] = v
 					end
-					wyozimc.Database:Query(nil, nil, "UPDATE %b SET custom = %s", (wyozimc.DatabaseDetails.TablePrefix .. "media"), util.TableToJSON(filteredentry))
+					wyozimc.Database:Query(nil, nil, "UPDATE %b SET custom = %s WHERE link = %s AND time = %d", (wyozimc.DatabaseDetails.TablePrefix .. "media"), util.TableToJSON(filteredentry), tblentry.Link, tblentry.Date)
 				end
 			end
 		end,
