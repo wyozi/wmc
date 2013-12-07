@@ -50,8 +50,15 @@ wyozimc.AddProvider({
 		  "auto_play": true
 		};
 		widget.load(widgetUrl, widgetOptions);
-		widget.seekTo(]] .. tostring(math.Round(data.StartAt or 0 * 1000)) .. [[);
+		
 	//}
+
+	widget.bind(SC.Widget.Events.LOAD_PROGRESS, function onLoadProgress (e) {
+		if (e.loadedProgress && e.loadedProgress === 1) {
+			widget.seekTo(]] .. tostring(math.Round(data.StartAt or 0 * 1000)) .. [[);
+			widget.unbind(SC.Widget.Events.LOAD_PROGRESS);
+		}
+	});
 
 	function setSoundcloudVolume(vol) {
 	  widget.setVolume(vol);

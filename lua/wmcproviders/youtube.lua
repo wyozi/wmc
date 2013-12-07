@@ -8,9 +8,13 @@ local raw_patterns = {
 local all_patterns = {}
 
 -- Appends time modifier patterns to each pattern
-for _,p in pairs(raw_patterns) do
-	table.insert(all_patterns, p .. "#t=(%d+)m(%d+)s")
-	table.insert(all_patterns, p .. "#t=(%d+)")
+for k,p in pairs(raw_patterns) do
+	local hash_letter = "#"
+	if k == 1 then
+		hash_letter = "?"
+	end
+	table.insert(all_patterns, p .. hash_letter .. "t=(%d+)m(%d+)s")
+	table.insert(all_patterns, p .. hash_letter .. "t=(%d+)")
 	table.insert(all_patterns, p)
 end
 
