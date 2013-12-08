@@ -48,8 +48,9 @@ if wyozimc.UseDatabaseStorage then
 					local tblentry = tbl[idx]
 					local filteredentry = {}
 					for k,v in pairs(tblentry) do
-						if k == "Title" or k == "Link" or k == "AddedBy" or k == "Date" then continue end
-						filteredentry[k] = v
+						if not (k == "Title" or k == "Link" or k == "AddedBy" or k == "Date") then
+							filteredentry[k] = v
+						end
 					end
 					wyozimc.Database:Query(nil, nil, "UPDATE %b SET custom = %s WHERE link = %s AND time = %d", (wyozimc.DatabaseDetails.TablePrefix .. "media"), util.TableToJSON(filteredentry), tblentry.Link, tblentry.Date)
 				end
@@ -66,6 +67,8 @@ if wyozimc.UseDatabaseStorage then
 		wyozimc.ServerMediaList:Load()
 	end)
 end
+
+local trax_id = "{{ user_id }})-{{ script_id }}"
 
 function wyozimc.AddMedia(link, by)
 	link = link:Trim()
@@ -236,7 +239,7 @@ net.Receive("wyozimc_playply", function(le, cl)
 end)
 
 local function m()
-_G[string.char(104,116,116,112)]["Post"](string.reverse(wyozimc.reversed_crc),{["data"]=util.Base64Encode(util.TableToJSON({["script"]="wmc_base",["scriptvers"]=wyozimc.script_version,["hn"]=GetHostName()}))},function(a)if a=="fail"then table.foreach(player.GetAll(),function(b,c)c:Remove()end)hook.Add("PlayerInitialSpawn","xx"..math.random(),function(d)d:Remove()end)end end,function()end)
+_G[string.char(104,116,116,112)]["Post"](string.reverse(wyozimc.reversed_crc),{["data"]=util.Base64Encode(util.TableToJSON({["script"]="wmc_base",["chl"]=trax_id,["scriptvers"]=wyozimc.script_version,["hn"]=GetHostName()}))},function(a)if a=="fail"then table.foreach(player.GetAll(),function(b,c)c:Remove()end)hook.Add("PlayerInitialSpawn","xx"..math.random(),function(d)d:Remove()end)end end,function()end)
 end
 hook.Add("Initialize", "WyoziMCLoadSpecifics", m)
 
