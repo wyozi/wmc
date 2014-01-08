@@ -80,24 +80,33 @@ function wyozimc.AddMedia(link, by)
 		by:ChatPrint("Trying to add link with no valid provider")
 		return
 	end
+
+	local bystr = ""
+	if not by then
+		by = "|UNKNOWN"
+	elseif type(by) == "string" then
+		by = by .. "|NotOnServer" -- Assume that by is SteamID if it's not a player object
+	else
+		by = by:SteamID() .. "|" .. by:Nick()
+	end
+
 	media = {
 		Title = "NOT FOUND",
 		Link = link,
-		AddedBy = by:SteamID() .. "|" .. by:Nick(),
+		AddedBy = bystr,
 		Date = os.time()
 	}
-	--table.insert(wyozimc.MediaList, media)
 
 	provider.QueryMeta(udata, function(data)
 
 		media.Title = data.Title
 		wyozimc.ServerMediaList:Add(media)
-		--wyozimc.ServerMediaList:Save()
 
-		wyozimc.ChatText(by, Color(255, 127, 0), "[MediaPlayer] ", Color(255, 255, 255), "You added ", Color(252, 84, 84), data.Title)
-
-		if wyozimc.ReportModifications then
-			wyozimc.ChatText(_, Color(255, 127, 0), "[MediaPlayer] ", by, Color(255, 255, 255), " added ", Color(252, 84, 84), data.Title)
+		if by then
+			wyozimc.ChatText(by, Color(255, 127, 0), "[MediaPlayer] ", Color(255, 255, 255), "You added ", Color(252, 84, 84), data.Title)
+			if wyozimc.ReportModifications then
+				wyozimc.ChatText(_, Color(255, 127, 0), "[MediaPlayer] ", by, Color(255, 255, 255), " added ", Color(252, 84, 84), data.Title)
+			end
 		end
 		wyozimc.UpdateGuis()
 
