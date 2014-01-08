@@ -60,11 +60,7 @@ wyozimc.AddProvider({
 
 		local startat = data.StartAt
 
-		if cvars.Bool("wyozimc_forcehtml5") then
-			callback("http://www.youtube.com/embed/" .. wyozimc.JSEscape(data.Matches[1]) .. "?html5=1&autoplay=1&controls=0&rel=0&showinfo=0&start=" .. tostring(startat), startat)
-		else
-			callback("http://www.youtube.com/watch_popup?v=" .. wyozimc.JSEscape(data.Matches[1]) .. "&vq=" .. vqstring .. "&start=" .. tostring(startat), startat)
-		end
+		callback("http://www.youtube.com/embed/" .. wyozimc.JSEscape(data.Matches[1]) .. "?html5=1&autoplay=1&controls=0&rel=0&showinfo=0&start=" .. tostring(startat), startat)
 	end,
 	ParseUData = function(udata)
 		if udata.Matches[2] and udata.Matches[3] then -- Minutes and seconds

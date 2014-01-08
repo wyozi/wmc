@@ -27,8 +27,6 @@ hook.Add("WyoziMCTabs", "WyoziMCAddSettingsTab", function(dtabs)
 
 		dgui:CheckBox("Prefer high quality videos. Might slow down video loading time!", "wyozimc_highquality")
 
-		dgui:CheckBox("Force HTML5. Improves performance, but might not work with all videos.", "wyozimc_forcehtml5")
-
 		dgui:CheckBox("Enable debug mode", "wyozimc_debug")
 
 		dgui:CheckBox("Enable video debug mode", "wyozimc_debugvid")

@@ -10,9 +10,6 @@ wyozimc_highquality = CreateConVar("wyozimc_highquality", "0", FCVAR_ARCHIVE)
 
 wyozimc_bassvolmapping = CreateConVar("wyozimc_bassvolmapping", "1", FCVAR_ARCHIVE)
 
--- Mac users prob have better luck with html 5
-wyozimc_forcehtml5 = CreateConVar("wyozimc_forcehtml5", system.IsOSX() and "1" or "0", FCVAR_ARCHIVE)
-
 wyozimc.GetMasterVolume = (is_bass_module) ->
 	curvolume = wyozimc_volume\GetFloat()
 	if is_bass_module
