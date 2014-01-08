@@ -40,6 +40,8 @@ class MediaContainer
 
 				\AddFunction "wmc", "SetFlashStatus", (bool) ->
 					@browser_flash_found = bool
+
+				@add_browser_funcs(browser)
 					
 				--\QueueJavascript [[var hasFlash = false;
 				--	try {
@@ -81,6 +83,7 @@ class MediaContainer
 				surface.SetDrawColor(255, 255, 255)
 				surface.DrawTexturedRect(0, 0, w, h)
 
+	add_browser_funcs: (browser) =>
 
 	-- == HOOK METHODS == These should be overridden for additional functionality
 

