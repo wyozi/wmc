@@ -35,8 +35,12 @@ class MediaContainer
 				\SetPaintedManually(true)
 
 				\AddFunction "wmc", "SetElapsed", (elapsed) ->
+					wyozimc.Debug("Setting elapsed from browser to " .. tostring(elapsed))
 					if @play_data
-						@play_data.browser_vid_elapsed = elapsed
+						@play_data.browser_vid_elapsed = math.Round(elapsed)
+
+				\AddFunction "wmc", "UnableToPlay", (reason) ->
+					wyozimc.Debug("Unable to play media because " .. tostring(reason))
 
 				\AddFunction "wmc", "SetFlashStatus", (bool) ->
 					@browser_flash_found = bool

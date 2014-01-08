@@ -77,12 +77,14 @@ wyozimc.AddProvider({
 	end,
 	FuncQueryElapsed = function()
 		return [[try {
-		var player = document.getElementById('player1');
-		if (player.getPlayerState() == 0) // ended
-			wmc.SetElapsed(player.getDuration() + 2) // Stupid but works?
-		else
-			wmc.SetElapsed(player.getCurrentTime());
-		} catch (e) {}
+			var player = document.getElementById('player1');
+			var state = player.getPlayerState();
+			if (state == 0) // ended
+				wmc.SetElapsed(player.getDuration() + 2) // Stupid but works?
+			else
+				wmc.SetElapsed(player.getCurrentTime());
+		} catch (e) {
+		}
 		]]
 	end
 })
