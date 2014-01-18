@@ -83,11 +83,11 @@ function wyozimc.AddMedia(link, by)
 
 	local bystr = ""
 	if not by then
-		by = "|UNKNOWN"
+		bystr = "|UNKNOWN"
 	elseif type(by) == "string" then
-		by = by .. "|NotOnServer" -- Assume that by is SteamID if it's not a player object
+		bystr = by .. "|NotOnServer" -- Assume that by is SteamID if it's not a player object
 	else
-		by = by:SteamID() .. "|" .. by:Nick()
+		bystr = by:SteamID() .. "|" .. by:Nick()
 	end
 
 	media = {
