@@ -18,8 +18,8 @@
 <body>
 	<div id="playerdiv"></div>
 	<script type="text/javascript">
-		function playVideo(id) {
-			document.getElementById("playerdiv").innerHTML = "<embed src=\"http://www.youtube.com/v/" + id + "?vq=hd720&version=3&enablejsapi=1&rel=0&fs=0&modestbranding=1&showinfo=0&autohide=0&autoplay=1\"\
+		function playVideo(id, start) {
+			document.getElementById("playerdiv").innerHTML = "<embed src=\"http://www.youtube.com/v/" + id + "?vq=hd720&version=3&enablejsapi=1&rel=0&fs=0&modestbranding=1&showinfo=0&autohide=0&autoplay=1&start=" + (start || 0) + "\"\
 				type=\"application/x-shockwave-flash\"\
 				id=\"player1\"\
 				allowscriptaccess=\"always\"\
@@ -37,7 +37,7 @@
 		}
 		var params = getUrlParams();
 		if (params.vid)
-			playVideo(params.vid);
+			playVideo(params.vid, params.start);
 	</script>
 </body>
 </html>
