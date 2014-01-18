@@ -36,7 +36,8 @@
 			return result;
 		}
 		var params = getUrlParams();
-		playVideo(params.vid || "kUs9YzY7t-8");
+		if (params.vid)
+			playVideo(params.vid);
 	</script>
 </body>
 </html>
