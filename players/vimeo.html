@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>WMC: Vimeo Player</title>
+	<style type="text/css">
+	html, body {
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		margin-bottom: 0;
+	}
+	#player1 {
+		width: 100%;
+		height: 100%;
+	}
+	</style>
+</head>
+<body>
+	<iframe id="player1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="http://a.vimeocdn.com/js/froogaloop2.min.js"></script>
+	<script type="text/javascript">
+		function getUrlParams() {
+			var query = location.search.substr(1);
+			var data = query.split("&");
+			var result = {};
+			for(var i=0; i<data.length; i++) {
+				var item = data[i].split("=");
+				result[item[0]] = item[1];
+			}
+			return result;
+		}
+		var params = getUrlParams();
+		if (params.vid)
+			$("#player1")[0].src = "http://player.vimeo.com/video/" + (params.vid || "61813841") + "?api=1&player_id=player1&autoplay=1";
+
+		var iframe = $('#player1')[0],
+			player = $f(iframe);
+			
+		function setVimeoVolume(vol) {
+			player.api("setVolume", vol);
+		}
+    </script>
+</body>
+</html>
