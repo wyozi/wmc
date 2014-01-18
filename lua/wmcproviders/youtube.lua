@@ -58,9 +58,8 @@ wyozimc.AddProvider({
 			vqstring = "hd1080"
 		end
 
-		local startat = data.StartAt
-
-		callback("http://www.youtube.com/embed/" .. wyozimc.JSEscape(data.Matches[1]) .. "?html5=1&autoplay=1&controls=0&rel=0&showinfo=0&start=" .. tostring(startat), startat)
+		local startat = data.StartAt or 0
+		callback(string.format("http://wyozi.github.io/wmc/players/youtube.html?vid=%s&start=%d", wyozimc.JSEscape(data.Matches[1]), startat))
 	end,
 	ParseUData = function(udata)
 		if udata.Matches[2] and udata.Matches[3] then -- Minutes and seconds
