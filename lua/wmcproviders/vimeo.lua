@@ -30,10 +30,9 @@ wyozimc.AddProvider({
 		end)
 	end,
 	TranslateUrl = function(data, callback)
-		callback("http://player.vimeo.com/video/" .. tostring(data.Matches[1]) .. "?autoplay=1&api=1") -- #t=" .. tostring(math.Round(data.StartAt or 0)) .. "s" Doesnt seem to work properly on awesomium?
+		callback(string.format("http://wyozi.github.io/wmc/players/vimeo.html?vid=%s", wyozimc.JSEscape(data.Matches[1]), startat))
 	end,
 	FuncSetVolume = function(volume)
-		-- "window.postMessage(JSON.stringify({method: \"setVolume\", value: \"" .. tostring(volume) .. "\"}));"
-		return ""
+		return "setVimeoVolume(" .. tostring(volume) .. ")"
 	end
 })
