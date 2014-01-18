@@ -66,9 +66,12 @@ function wyozimc.AddSimplePlayContextOptions(menu, theurl, playflags)
 	playflags = playflags or 0
 	menu:AddOption("Play", function()
 		local nflags = bit.bor(playflags, wyozimc.FLAG_PLAYING_CLIENTSIDE)
-		wyozimc.PlayUrl(theurl, _, nflags).done(function(qdata)
-			wyozimc.ChatText(Color(255, 127, 0), "[MediaPlayer] ", Color(255, 255, 255), "Playing ", Color(252, 84, 84), qdata.Title or theurl, Color(255, 255, 255), " locally.")
-		end)
+		local fut = wyozimc.PlayUrl(theurl, _, nflags)
+		if fut then
+			fut.done(function(qdata)
+				wyozimc.ChatText(Color(255, 127, 0), "[MediaPlayer] ", Color(255, 255, 255), "Playing ", Color(252, 84, 84), qdata.Title or theurl, Color(255, 255, 255), " locally.")
+			end)
+		end
 	end):SetIcon( "icon16/music.png" )
 
 	if wyozimc.HasPermission(LocalPlayer(), "PlayAll") then
