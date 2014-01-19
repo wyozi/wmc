@@ -2,7 +2,7 @@ Wyozi Media Center is an addon for Garry's Mod, that adds extensive media playin
 
 ## WMC Code? On Github?
 
-Yes! This doesn't mean you lost money if you bought the script on coderhire, as only CoderHire purchasers have access to support in installing or using WMC. If you want support in either of these things, please [me a CoderHire PM](http://coderhire.com/profile/personalmessages/send/1443) or [add me on Steam](http://steamcommunity.com/id/wyozi).
+Yes! This doesn't mean you lost money if you bought the script on coderhire, as only CoderHire purchasers have access to support in installing or using WMC. If you want support in either of these things, please [send me a CoderHire PM](http://coderhire.com/profile/personalmessages/send/1443) or [add me on Steam](http://steamcommunity.com/id/wyozi).
 
 ## Doesn't this mean that you can get WMC for free now?
 
