@@ -50,7 +50,10 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 	local w, h = ScrW(), ScrH()
 	local hw = 350	
 
-	local flash_found = true -- TODO
+	local flash_found = true
+	if wyozimc.MainContainer and wyozimc.MainContainer.browser_flash_found == false then
+		flash_found = false
+	end
 
 	local hh = flash_found and 50 or 70
 
@@ -103,7 +106,7 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 
 	surface.SetFont("CenterPrintText")
 
-	if not flash_found and wyozimc.Provider and not wyozimc.Provider.UseGmodPlayer then
+	if not flash_found then
 		local t = "Warning! No flash player found. Music might not play."
 		local ts = surface.GetTextSize(t)
 		surface.SetTextPos(w/2 - ts/2, 45)

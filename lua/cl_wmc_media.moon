@@ -44,6 +44,7 @@ class MediaContainer
 
 				\AddFunction "wmc", "SetFlashStatus", (bool) ->
 					@browser_flash_found = bool
+					wyozimc.Debug("Setting flash status to " .. tostring(bool))
 
 				@add_browser_funcs(browser)
 					
