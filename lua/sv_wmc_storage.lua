@@ -70,8 +70,7 @@ end
 
 function wyozimc.AddMedia(link, by)
 	link = link:Trim()
-	local media = wyozimc.GetMediaByLink(link)
-	if media then
+	if wyozimc.GetMediaByLink(link) then
 		by:ChatPrint("Media already found in Media List")
 		return
 	end
@@ -90,7 +89,7 @@ function wyozimc.AddMedia(link, by)
 		bystr = by:SteamID() .. "|" .. by:Nick()
 	end
 
-	media = {
+	local media = {
 		Title = "NOT FOUND",
 		Link = link,
 		AddedBy = bystr,
