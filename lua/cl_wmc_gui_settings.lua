@@ -46,6 +46,8 @@ local function LoadWmcNews()
 
 	http.Fetch("http://gmod.icemist.co/wmcnews.php", function(data)
 		local tbl = util.JSONToTable(data)
+		if not tbl then return end
+		
 		local curtime = os.time()
 		for _,new in pairs(tbl) do
 			if tonumber(new.time) > curtime-3600 then
