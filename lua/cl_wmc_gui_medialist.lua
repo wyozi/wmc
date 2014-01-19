@@ -87,7 +87,9 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 	list:SetMultiSelect(false)
 	list.OnRowRightClick = function(panel, line)
 
-		local theurl = list:GetLine(line).OrigLink
+		local theline = list:GetLine(line)
+
+		local theurl = theline.OrigLink
 
 		local menu = DermaMenu()
 		menu:AddOption("Copy Link", function() SetClipboardText(theurl) end):SetIcon( "icon16/page_white_copy.png" )
@@ -102,6 +104,17 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 			menu:AddOption("Delete", function()
 				net.Start("wyozimc_edit") net.WriteString("del") net.WriteString(theurl) net.SendToServer() 
 			end):SetIcon( "icon16/delete.png" )
+		end
+		if wyozimc.HasPermission(LocalPlayer(), "Rename") then
+			menu:AddOption("Rename", function()
+				Derma_StringRequest("Rename WMC Media",
+					"What would you like to rename this media to?",
+					theline:GetColumnText(2),
+					function(text)
+						net.Start("wyozimc_edit") net.WriteString("rename") net.WriteString(theurl) net.WriteString(text) net.SendToServer()
+					end
+				) 
+			end):SetIcon( "icon16/book_edit.png" )
 		end
 
 		local tmedia

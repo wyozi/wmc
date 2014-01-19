@@ -168,6 +168,23 @@ net.Receive("wyozimc_edit", function(le, cl)
 		if not wyozimc.HasPermission(cl, "Add") then cl:ChatPrint("No permission!") return end
 
 		wyozimc.AddMedia(id, cl)
+	elseif ttype == "rename" then
+		local id = net.ReadString()
+
+		if not wyozimc.HasPermission(cl, "Rename") then cl:ChatPrint("No permission!") return end
+		
+		local media = wyozimc.GetMediaByLink(id)
+		if not media then
+			cl:ChatPrint("Not in media list?")
+			return
+		end
+
+		media.Title = net.ReadString()
+
+		local uniqidx = wyozimc.ServerMediaList:UniqueIndex(id)
+		wyozimc.ServerMediaList:Save("Custom", uniqidx)
+		wyozimc.UpdateGuis()
+
 	elseif ttype == "del" then
 		local id = net.ReadString()
 
@@ -184,7 +201,6 @@ net.Receive("wyozimc_edit", function(le, cl)
 		end
 
 		wyozimc.ServerMediaList:Remove(media)
-		--wyozimc.SaveMediaList()
 		wyozimc.UpdateGuis()
 	end
 end)
