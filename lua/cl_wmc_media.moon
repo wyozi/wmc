@@ -156,6 +156,8 @@ class MediaContainer
 		return tbl
 
 	play_url: (url, startat, flags = 0) =>
+		if not cvars.Bool("wyozimc_enabled")
+			return wyozimc.Debug("play_url prevented because wmc disabled")
 		handled_res, reason  = @handle_flags(url, flags)
 		if handled_res == true
 			wdebug("Play prevented in handle_flags for ", url, ": ", reason)

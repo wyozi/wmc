@@ -73,8 +73,6 @@ hook.Add "Think", "WyoziMCMaintainMainVolume", ->
 -- Override some of the old global functions
 
 wyozimc.PlayUrl = (url, startat, flags) ->
-	if not wyozimc_enabled\GetBool!
-		return wyozimc.Debug("wyozimc.PlayUrl prevented because wmc disabled")
 	wyozimc.MainContainer\play_url(url, startat, flags)
 
 wyozimc.GetPlayedFraction = ->
