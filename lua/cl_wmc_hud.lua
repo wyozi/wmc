@@ -50,12 +50,17 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 	local w, h = ScrW(), ScrH()
 	local hw = 350	
 
-	local flash_found = true
-	if wyozimc.MainContainer and wyozimc.MainContainer.browser_flash_found == false then
-		flash_found = false
+	local warning_msg
+
+	if wyozimc.MainContainer then
+		if wyozimc.MainContainer.browser_flash_found == false then
+			warning_msg = "Warning! No flash player found. Music might not play."
+		elseif wyozimc.MainContainer.browser_zero_elapses and wyozimc.MainContainer.browser_zero_elapses > 5 then
+			warning_msg = "Video might be blocked in your country."
+		end
 	end
 
-	local hh = flash_found and 50 or 70
+	local hh = warning_msg and 70 or 50
 
 	local clr = hud_background_color
 
@@ -104,13 +109,11 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 	surface.SetTextPos(w/2 - ts/2, progressbary-1)
 	surface.DrawText(t)
 
-	surface.SetFont("CenterPrintText")
-
-	if not flash_found then
-		local t = "Warning! No flash player found. Music might not play."
-		local ts = surface.GetTextSize(t)
+	if warning_msg then
+		surface.SetFont("CenterPrintText")
+		local ts = surface.GetTextSize(warning_msg)
 		surface.SetTextPos(w/2 - ts/2, 45)
 		surface.SetTextColor(255, 0, 0)
-		surface.DrawText(t)
+		surface.DrawText(warning_msg)
 	end
 end)

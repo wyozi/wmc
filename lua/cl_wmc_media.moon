@@ -36,6 +36,11 @@ class MediaContainer
 
 				\AddFunction "wmc", "SetElapsed", (elapsed) ->
 					wyozimc.Debug("Setting elapsed from browser to " .. tostring(elapsed))
+					if elapsed < 1
+						@browser_zero_elapses += 1
+					else
+						@browser_zero_elapses = 0
+
 					if @play_data
 						@play_data.browser_vid_elapsed = math.Round(elapsed)
 
@@ -199,6 +204,8 @@ class MediaContainer
 			flags: flags,
 			provider: provider,
 			udata: udata
+
+		@browser_zero_elapses = 0
 
 		wdebug("Playing ", url, " with flags ", bit.tohex(flags), " & startat ", startat)
 
