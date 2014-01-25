@@ -6,9 +6,12 @@ wyozimc.FLAG_PLAYING_CLIENTSIDE = 8
 wyozimc.FLAG_NO_HUD = 16
 wyozimc.FLAG_DIRECT_REQUEST = 32 -- Played using "Play for All" in F9 menu
 
--- Custom flags should start from 256 and go downward. Currently known uses of custom flags:
+-- Currently known uses of custom flags:
 -- TTT: wyozimc.FLAG_IS_ENDROUND = 256
 -- Playlists: wyozimc.FLAG_IN_PLAYLIST = 128
+-- TTT Themes: wyozimc.FLAG_IS_TTTTHEME = 64
+
+-- There's no space for other custom flags unfortunately. Refer to issue #20 on github
 
 function wyozimc.CallHook(hooknm, ...)
 	return hook.Call(hooknm, GAMEMODE, ...)
