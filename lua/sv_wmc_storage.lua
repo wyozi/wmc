@@ -170,7 +170,7 @@ net.Receive("wyozimc_edit", function(le, cl)
 	elseif ttype == "rename" then
 		local id = net.ReadString()
 
-		if not wyozimc.HasPermission(cl, "Rename") then cl:ChatPrint("No permission!") return end
+		if not wyozimc.HasPermission(cl, "Edit") then cl:ChatPrint("No permission!") return end
 		
 		local media = wyozimc.GetMediaByLink(id)
 		if not media then

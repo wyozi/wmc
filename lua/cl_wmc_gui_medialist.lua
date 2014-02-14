@@ -105,7 +105,7 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 				net.Start("wyozimc_edit") net.WriteString("del") net.WriteString(theurl) net.SendToServer() 
 			end):SetIcon( "icon16/delete.png" )
 		end
-		if wyozimc.HasPermission(LocalPlayer(), "Rename") then
+		if wyozimc.HasPermission(LocalPlayer(), "Edit") then
 			menu:AddOption("Rename", function()
 				Derma_StringRequest("Rename WMC Media",
 					"What would you like to rename this media to?",
