@@ -212,21 +212,23 @@ class MediaContainer
 		-- Verify that the browser actually exists
 		@verify_components_exist!
 
+		-- To be returned from this function
 		future = @create_future!
 
-		-- If it's possible to query for data, we should do it here
-		if provider.QueryMeta
-			provider.QueryMeta udata, (data) ->
-				wdebug("QueryData received: (title=" , data.Title, " d=", data.Duration, ")")
-				if not @play_data
-					return
-				if future.done_cb
-					future.done_cb(data)
-				@play_data.query_data = data,
-				(errormsg) ->
+		-- This is a separate function so each media type can decide when to query
+		query_meta = ->
+			-- If it's possible to query for data, we should do it here
+			if provider.QueryMeta
+				provider.QueryMeta udata, (data) ->
+					wdebug("QueryData received: (title=" , data.Title, " d=", data.Duration, ")")
+					if not @play_data
+						return
+					if future.done_cb
+						future.done_cb(data)
+					@play_data.query_data = data,
+					(errormsg) ->
 			
 		-- Finally, time to actually play something
-		
 		if provider.UseGmodPlayer -- We want to use the built-in BASS
 			if cached_handle = @get_cached_bass_handle(url) -- See if there's a cached handle
 				cached_handle\Play()
@@ -243,6 +245,12 @@ class MediaContainer
 					if is_valid(old_chan)
 						old_chan\Stop()
 
+					-- Store soundchannel in udata
+					udata.SoundChannel = chan
+
+					-- .. and then call query_meta which gets metadata from the soundchannel
+					query_meta!
+
 					@sound_channel = chan
 					chan\Play()
 					wdebug("Playing ", url, " using BASS")
@@ -251,12 +259,16 @@ class MediaContainer
 			html_source = provider.SetHTML(udata, url)
 			@player_browser\SetHTML(html_source)
 			wdebug("Playing ", url, " using SetHTML")
+
+			query_meta!
 		else
 			wdebug("Translating url ", url)
 			provider.TranslateUrl udata, (url, newstartat) ->
 				udata.StartAt = udata.StartAt or newstartat -- Providers might parse startat data from the link, so this required
 				@player_browser\OpenURL(url)
 				wdebug("Playing translated ", url, " normally")
+				
+			query_meta!
 
 		@post_play(url, provider, udata, flags)
 		wyozimc.CallHook("WyoziMCGlobalPostPlay", self, provider, url, udata, flags)

@@ -5,9 +5,16 @@ wyozimc.AddProvider({
 		"^https?://(.*)%.ogg",
 	},
 	QueryMeta = function(data, callback, failCallback)
-		callback({
-			Title = data.WholeUrl:match( "([^/]+)$" )
-		})
+		local querydata = {}
+
+		-- SoundChannel valid and using recent enough version
+		if IsValid(data.SoundChannel) and data.SoundChannel.GetLength then
+			querydata.Duration = data.SoundChannel:GetLength()
+		end
+
+		querydata.Title = data.WholeUrl:match( "([^/]+)$" )
+
+		callback(querydata)
 	end,
 	TranslateUrl = function(data, callback)
 		callback(data.WholeUrl)
