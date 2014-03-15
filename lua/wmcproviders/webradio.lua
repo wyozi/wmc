@@ -9,6 +9,7 @@ wyozimc.AddProvider({
 			Duration = -1 -- streaming
 		})
 	end,
+	MediaType = "bass",
 	TranslateUrl = function(data, callback)
 		callback(data.WholeUrl)
 	end,

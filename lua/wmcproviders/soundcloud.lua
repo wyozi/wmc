@@ -25,6 +25,7 @@ wyozimc.AddProvider({
 
 		end)
 	end,
+	MediaType = "web",
 	SetHTML = function(data, url)
 		return [[<!DOCTYPE html>
 <html><head></head><body>

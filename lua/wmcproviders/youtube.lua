@@ -68,6 +68,7 @@ wyozimc.AddProvider({
 			udata.StartAt = math.Round(tonumber(udata.Matches[2]))
 		end
 	end,
+	MediaType = "web",
 	FuncSetVolume = function(volume)
 		return [[try {
 		document.getElementById('player1').setVolume(]] .. (volume*100) .. [[);

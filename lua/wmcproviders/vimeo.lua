@@ -29,6 +29,7 @@ wyozimc.AddProvider({
 
 		end)
 	end,
+	MediaType = "web",
 	TranslateUrl = function(data, callback)
 		callback(string.format("http://wyozi.github.io/wmc/players/vimeo.html?vid=%s", wyozimc.JSEscape(data.Matches[1]), startat))
 	end,

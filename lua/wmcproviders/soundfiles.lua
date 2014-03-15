@@ -16,6 +16,7 @@ wyozimc.AddProvider({
 
 		callback(querydata)
 	end,
+	MediaType = "bass",
 	TranslateUrl = function(data, callback)
 		callback(data.WholeUrl)
 	end,

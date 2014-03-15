@@ -64,35 +64,6 @@ class MediaContainer
 
 			@player_browser = browser
 
-		if not is_valid(@browser_debug_comp)
-			debug_comp = vgui.Create("DPanel")
-			with debug_comp
-				\SetPos(0, 0)
-				\SetSize(@custom_browser_width or 512, @custom_browser_height or 287)
-				\SetVisible(false)
-			@browser_debug_comp = debug_comp
-
-			--debug_comp.Think = =>
-			--	set_vis_state = cvars.Bool("wyozimc_debugvid")
-			--	@SetVisible(set_vis_state)
-
-			id_lbl = vgui.Create("DLabel", debug_comp)
-			id_lbl\Dock(BOTTOM)
-			id_lbl\SetText(@get_debug_id!)
-			id_lbl\SetColor(Color(0, 0, 0))
-
-			browser_painter = vgui.Create("DPanel", debug_comp)
-			browser_painter\Dock(FILL)
-
-			browser_painter.Paint = (pself, w, h) ->
-				if not is_valid @player_browser
-					debug_comp\Remove!
-					return
-				@player_browser\UpdateHTMLTexture()
-				surface.SetMaterial(@player_browser\GetHTMLMaterial!)
-				surface.SetDrawColor(255, 255, 255)
-				surface.DrawTexturedRect(0, 0, w, h)
-
 	add_browser_funcs: (browser) =>
 
 	-- == HOOK METHODS == These should be overridden for additional functionality
@@ -174,6 +145,11 @@ class MediaContainer
 			ErrorNoHalt("Trying to play something with no provider: " .. tostring(url))
 			return
 
+		mtype = wyozimc.CreateMediaType(provider.MediaType)
+		if not mtype then
+			ErrorNoHalt("Trying to create nonexistent mediatype: " .. tostring(provider.MediaType))
+			return
+
 		-- Set StartAt
 		udata.StartAt = math.Round(startat or udata.StartAt or 0)
 		startat = udata.StartAt
@@ -186,7 +162,7 @@ class MediaContainer
 		if wyozimc.CallHook("WyoziMCGlobalPrePlay", self, provider, url, udata, flags)
 			return true, "Terminated by WyoziMCGlobalPrePlay hook"
 
-		-- Stop old media. Needed so both soundchannel and html stop
+		-- Stop old media.
 		@stop!
 
 		-- Save old play data in case we need it for something
@@ -203,7 +179,8 @@ class MediaContainer
 			startat: startat,
 			flags: flags,
 			provider: provider,
-			udata: udata
+			udata: udata,
+			mtype: mtype
 
 		@browser_zero_elapses = 0
 

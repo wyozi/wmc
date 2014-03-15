@@ -2,7 +2,8 @@ wyozimc.MediaTypes = { }
 local BaseMediaType
 do
   local _base_0 = {
-    allocate = function() end
+    create = function(self) end,
+    destroy = function(self) end
   }
   _base_0.__index = _base_0
   local _class_0 = setmetatable({
@@ -23,6 +24,14 @@ end
 wyozimc.BaseMediaType = BaseMediaType
 wyozimc.AddMediaType = function(id, cls)
   wyozimc.MediaTypes[id] = cls
+end
+wyozimc.CreateMediaType = function(id)
+  do
+    local cls = wyozimc.MediaTypes[id]
+    if cls then
+      return cls()
+    end
+  end
 end
 for _, fil in pairs(file.Find("wmcmediatypes/*.lua", "LUA")) do
   if SERVER then
