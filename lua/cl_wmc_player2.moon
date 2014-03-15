@@ -87,6 +87,8 @@ wyozimc.Stop = (global_request) ->
 net.Receive "wyozimc_play", ->
 	url = net.ReadString()
 	flags = net.ReadUInt(32)
+	extra = net.ReadTable()
+	
 	if url == ""
 		wyozimc.Debug("Got empty url, assuming we need to stop. Flags: " .. bit.tohex(flags))
 		wyozimc.Stop(bit.band(flags, wyozimc.FLAG_WAS_GLOBAL_REQUEST) == wyozimc.FLAG_WAS_GLOBAL_REQUEST)
