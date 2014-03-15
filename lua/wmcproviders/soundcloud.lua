@@ -6,7 +6,7 @@ wyozimc.AddProvider({
 	},
 	QueryMeta = function(data, callback, failCallback)
 
-		local url = Format("http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s/%s&client_id=YOUR_CLIENT_ID", data.Matches[1], data.Matches[2])
+		local url = Format("http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s/%s&client_id=YOUR_CLIENT_ID", data.udata.Matches[1], data.udata.Matches[2])
 
 		wyozimc.Debug("Fetching query from " .. url)
 

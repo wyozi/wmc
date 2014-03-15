@@ -1,5 +1,6 @@
 class BASSMediaType extends wyozimc.BaseMediaType
-	create: =>
+	create: (query_func)=>
+		@qf = query_func
 
 	play: (url, opts) =>
 		@loading = true
@@ -7,9 +8,11 @@ class BASSMediaType extends wyozimc.BaseMediaType
 			if @terminateload
 				chan\Stop!
 				return
-				
+
 			@chan = chan
-			@loading = false)
+			@loading = false
+
+			@qf!)
 
 	destroy: =>
 		if IsValid(@chan)

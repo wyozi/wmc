@@ -8,11 +8,11 @@ wyozimc.AddProvider({
 		local querydata = {}
 
 		-- SoundChannel valid and using recent enough version
-		if IsValid(data.SoundChannel) and data.SoundChannel.GetLength then
-			querydata.Duration = data.SoundChannel:GetLength()
+		if IsValid(data.mtype.chan) and data.mtype.chan.GetLength then
+			querydata.Duration = data.mtype.chan:GetLength()
 		end
 
-		querydata.Title = data.WholeUrl:match( "([^/]+)$" )
+		querydata.Title = data.udata.WholeUrl:match( "([^/]+)$" )
 
 		callback(querydata)
 	end,

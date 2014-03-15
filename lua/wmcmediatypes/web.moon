@@ -30,7 +30,7 @@ class HTMLCompPool extends Pool
 html_pool = HTMLCompPool()
 
 class WebMediaType extends wyozimc.BaseMediaType
-	create: =>
+	create: (query_func)=>
 		@html = html_pool\obtain!
 
 		with @html
@@ -55,6 +55,8 @@ class WebMediaType extends wyozimc.BaseMediaType
 			\AddFunction "wmc", "SetFlashStatus", (bool) ->
 				@browser_flash_found = bool
 				wyozimc.Debug("Setting flash status to " .. tostring(bool))
+
+		query_func!
 
 	destroy: =>
 		html_pool\free(@html)

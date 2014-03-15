@@ -5,7 +5,7 @@ wyozimc.AddProvider({
 		"^https?://vimeo.com/(%d*)/?",
 	},
 	QueryMeta = function(data, callback, failCallback)
-		local uri = data.Matches[1]
+		local uri = data.udata.Matches[1]
 		
 		local url = Format("http://vimeo.com/api/v2/video/%s.json", uri)
 
@@ -33,9 +33,9 @@ wyozimc.AddProvider({
 	PlayInMediaType = function(mtype, play_data)
 		local data = play_data.udata
 
-		mtype.html:OpenURL(string.format("http://wyozi.github.io/wmc/players/vimeo.html?vid=%s", wyozimc.JSEscape(data.Matches[1]))
+		mtype.html:OpenURL(string.format("http://wyozi.github.io/wmc/players/vimeo.html?vid=%s", wyozimc.JSEscape(data.Matches[1])))
 	end,
 	FuncSetVolume = function(mtype, volume)
-		mtype.html:RunJavscript("setVimeoVolume(" .. tostring(volume) .. ")")
+		mtype.html:RunJavascript("setVimeoVolume(" .. tostring(volume) .. ")")
 	end
 })

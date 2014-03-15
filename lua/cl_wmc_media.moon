@@ -193,8 +193,9 @@ class MediaContainer
 		-- This is a separate function so each media type can decide when to query
 		query_meta = ->
 			-- If it's possible to query for data, we should do it here
+			wdebug("Querying meta for ", url, ": ", provider.QueryMeta)
 			if provider.QueryMeta
-				provider.QueryMeta udata, (data) ->
+				provider.QueryMeta @play_data, (data) ->
 					wdebug("QueryData received: (title=" , data.Title, " d=", data.Duration, ")")
 					if not @play_data
 						return
@@ -203,7 +204,7 @@ class MediaContainer
 					@play_data.query_data = data,
 					(errormsg) ->
 			
-		mtype\create!
+		mtype\create(query_meta)
 
 		provider.PlayInMediaType mtype, @play_data
 

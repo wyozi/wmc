@@ -5,7 +5,7 @@ wyozimc.AddProvider({
 	},
 	QueryMeta = function(data, callback, failCallback)
 		callback({
-			Title = data.WholeUrl:match( "([^/]+)$" ),
+			Title = data.udata.WholeUrl:match( "([^/]+)$" ),
 			Duration = -1 -- streaming
 		})
 	end,
