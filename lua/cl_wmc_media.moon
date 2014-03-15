@@ -143,11 +143,6 @@ class MediaContainer
 			ErrorNoHalt("Trying to play something with no provider: " .. tostring(url))
 			return
 
-		mtype = wyozimc.CreateMediaType(provider.MediaType)
-		if not mtype then
-			ErrorNoHalt("Trying to create nonexistent mediatype: " .. tostring(provider.MediaType))
-			return
-
 		-- Set StartAt
 		udata.StartAt = math.Round(startat or udata.StartAt or 0)
 		startat = udata.StartAt
@@ -155,6 +150,11 @@ class MediaContainer
 		handled_res, reason  = @pre_play(url, provider, udata, flags)
 		if handled_res == true
 			wdebug("Play prevented in pre_play for ", url, ": ", reason)
+			return
+
+		mtype = wyozimc.CreateMediaType(provider.MediaType)
+		if not mtype then
+			ErrorNoHalt("Trying to create nonexistent mediatype: " .. tostring(provider.MediaType))
 			return
 
 		if wyozimc.CallHook("WyoziMCGlobalPrePlay", self, provider, url, udata, flags)

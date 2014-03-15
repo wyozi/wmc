@@ -30,8 +30,10 @@ wyozimc.AddProvider({
 		end)
 	end,
 	MediaType = "web",
-	TranslateUrl = function(data, callback)
-		callback(string.format("http://wyozi.github.io/wmc/players/vimeo.html?vid=%s", wyozimc.JSEscape(data.Matches[1]), startat))
+	PlayInMediaType = function(mtype, play_data)
+		local data = play_data.udata
+
+		mtype.html:OpenURL(string.format("http://wyozi.github.io/wmc/players/vimeo.html?vid=%s", wyozimc.JSEscape(data.Matches[1]))
 	end,
 	FuncSetVolume = function(mtype, volume)
 		mtype.html:RunJavscript("setVimeoVolume(" .. tostring(volume) .. ")")

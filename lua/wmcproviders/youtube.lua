@@ -64,15 +64,6 @@ wyozimc.AddProvider({
 
 		mtype.html:OpenURL(string.format("http://wyozi.github.io/wmc/players/youtube.html?vid=%s&start=%d", wyozimc.JSEscape(data.Matches[1]), startat))
 	end,
-	TranslateUrl = function(data, callback)
-		local vqstring = ""
-		if cvars.Bool("wyozimc_highquality") then
-			vqstring = "hd1080"
-		end
-
-		local startat = data.StartAt or 0
-		callback(string.format("http://wyozi.github.io/wmc/players/youtube.html?vid=%s&start=%d", wyozimc.JSEscape(data.Matches[1]), startat))
-	end,
 	ParseUData = function(udata)
 		if udata.Matches[2] and udata.Matches[3] then -- Minutes and seconds
 			udata.StartAt = math.Round(tonumber(udata.Matches[2])) * 60 + math.Round(tonumber(udata.Matches[3]))
