@@ -1,5 +1,8 @@
 
 class Pool
+	new: =>
+		@items = {}
+
 	new_object: =>
 
 	obtain: =>
@@ -14,9 +17,15 @@ class Pool
 class HTMLCompPool extends Pool
 	new_object: =>
 		comp = vgui.Create("DHTML")
-		with comp
-			\SetPaintedManually true
+		--with comp
+			--\SetPaintedManually true
+		wyozimc.Debug("[HTML-POOL] Created new DHTML comp " .. tostring(comp))
 		comp
+
+	free: (item)=>
+		item\SetHTML("This browser component was freed at " .. os.time!)
+		wyozimc.Debug("[HTML-POOL] Freed DHTML comp " .. tostring(item))
+		super\free item
 
 html_pool = HTMLCompPool()
 
@@ -28,7 +37,7 @@ class WebMediaType extends wyozimc.BaseMediaType
 			\SetPos(0, 0)
 			\SetSize(512, 512)
 
-			\SetPaintedManually(true)
+			--\SetPaintedManually(true)
 
 			\AddFunction "wmc", "SetElapsed", (elapsed) ->
 				wyozimc.Debug("Setting elapsed from browser to " .. tostring(elapsed))

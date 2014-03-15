@@ -52,6 +52,18 @@ wyozimc.AddProvider({
 
 		end)
 	end,
+	PlayInMediaType = function(mtype, play_data)
+		local data = play_data.udata
+
+		local vqstring = ""
+		if cvars.Bool("wyozimc_highquality") then
+			vqstring = "hd1080"
+		end
+
+		local startat = data.StartAt or 0
+
+		mtype.html:OpenURL(string.format("http://wyozi.github.io/wmc/players/youtube.html?vid=%s&start=%d", wyozimc.JSEscape(data.Matches[1]), startat))
+	end,
 	TranslateUrl = function(data, callback)
 		local vqstring = ""
 		if cvars.Bool("wyozimc_highquality") then
@@ -69,13 +81,14 @@ wyozimc.AddProvider({
 		end
 	end,
 	MediaType = "web",
-	FuncSetVolume = function(volume)
-		return [[try {
-		document.getElementById('player1').setVolume(]] .. (volume*100) .. [[);
+	FuncSetVolume = function(mtype, volume)
+		mtype.html:RunJavascript([[
+		try {
+			document.getElementById('player1').setVolume(]] .. (volume*100) .. [[);
 		} catch (e) {}
-		]]
+		]])
 	end,
-	FuncQueryElapsed = function()
+	FuncQueryElapsed = function(mtype)
 		return [[try {
 			var player = document.getElementById('player1');
 			var state = player.getPlayerState();

@@ -102,10 +102,8 @@ class MediaContainer
 		if wyozimc.CallHook("WyoziMCGlobalPreStop", self, global_request)
 			return true, "Terminated by WyoziMCGlobalPreStop hook"
 
-		if is_valid(@player_browser)
-			@player_browser\SetHTML("Hello!") -- Cheaper than to destroy and recreate later
-		if is_valid(@sound_channel) and not dont_destroy_soundchan
-			@sound_channel\Stop()
+		if pd = @play_data
+			pd.mtype\destroy!
 
 		@play_data = nil
 
@@ -205,6 +203,11 @@ class MediaContainer
 					@play_data.query_data = data,
 					(errormsg) ->
 			
+		mtype\create!
+
+		provider.PlayInMediaType mtype, @play_data
+
+		[==[
 		-- Finally, time to actually play something
 		if provider.UseGmodPlayer -- We want to use the built-in BASS
 			if cached_handle = @get_cached_bass_handle(url) -- See if there's a cached handle
@@ -246,6 +249,7 @@ class MediaContainer
 				wdebug("Playing translated ", url, " normally")
 				
 			query_meta!
+		]==]
 
 		@post_play(url, provider, udata, flags)
 		wyozimc.CallHook("WyoziMCGlobalPostPlay", self, provider, url, udata, flags)
@@ -301,13 +305,7 @@ class MediaContainer
 			-- If cur_vol isn't same as the volume in last tick or if media was started less than 2 seconds ago
 			if cur_vol ~= @last_volume or @play_data.real_started > CurTime() - 2
 
-				--if cur_vol ~= @last_volume
-					--wdebug("[VOLUME] ", cur_vol)
-
-				if is_valid(@player_browser)
-					@player_browser\QueueJavascript(set_vol(cur_vol))
-				if is_valid(@sound_channel)
-					set_vol(cur_vol, @sound_channel)
+				play_data.provider.FuncSetVolume(play_data.mtype, cur_vol)
 
 				@last_volume = cur_vol
 

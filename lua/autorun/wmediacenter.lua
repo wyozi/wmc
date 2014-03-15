@@ -27,6 +27,7 @@ end
 AddShared("sh_wmc_config.lua")
 AddShared("sh_wmc_utils.lua")
 AddShared("sh_wmc_tablemanip.lua")
+AddShared("sh_wmc_mediatypes.lua")
 
 AddServer("sv_wmc_dbconfig.lua")
 AddServer("sv_wmc_dbconnector.lua")
@@ -34,7 +35,6 @@ AddServer("sv_wmc_dbconnector.lua")
 AddShared("sh_wmc_providers.lua")
 AddServer("sv_wmc_storage.lua")
 
-AddClient("cl_wmc_mediatypes.lua")
 AddClient("cl_wmc_media.lua")
 AddClient("cl_wmc_player2.lua")
 

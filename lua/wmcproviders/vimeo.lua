@@ -33,7 +33,7 @@ wyozimc.AddProvider({
 	TranslateUrl = function(data, callback)
 		callback(string.format("http://wyozi.github.io/wmc/players/vimeo.html?vid=%s", wyozimc.JSEscape(data.Matches[1]), startat))
 	end,
-	FuncSetVolume = function(volume)
-		return "setVimeoVolume(" .. tostring(volume) .. ")"
+	FuncSetVolume = function(mtype, volume)
+		mtype.html:RunJavscript("setVimeoVolume(" .. tostring(volume) .. ")")
 	end
 })
