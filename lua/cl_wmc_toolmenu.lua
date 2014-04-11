@@ -6,5 +6,5 @@ function wyozimc.ToolSettingsMenu(panel)
 end
 
 hook.Add("PopulateToolMenu", "WyoziMCToolMenuSettings", function()
-	spawnmenu.AddToolMenuOption( "Utilities", "Wyozi Media Center", "WMC settings", "Settings", "", "", wyozimc.ToolSettingsMenu)
+	spawnmenu.AddToolMenuOption( "Options", "Wyozi Media Center", "WMC settings", "Settings", "", "", wyozimc.ToolSettingsMenu)
 end)
