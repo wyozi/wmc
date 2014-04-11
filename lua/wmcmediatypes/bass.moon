@@ -15,9 +15,27 @@ class BASSMediaType extends wyozimc.BaseMediaType
 			@qf!)
 
 	draw_visualization: (data)=>
-		-- TODO visualize BASS handle using FFT
-		surface.SetDrawColor(255, 127, 0)
-		surface.DrawRect(0, 0, data.w or 512, data.h or 512)
+		@fft_vals = @fft_vals or {}
+
+		if not IsValid(@chan)
+			return
+
+		val_count = @chan\FFT(@fft_vals, FFT_1024 )
+
+		space_width = data.w or 512
+		space_height = data.h or 512
+
+		vals_per_x = if val_count == 0
+			1
+		else
+			space_width / val_count
+
+
+		for i=1, val_count, math.ceil(vals_per_x) do
+			surface.SetDrawColor(HSVToColor(i, 0.95, 0.5))
+
+			h = @fft_vals[i]*space_height
+			surface.DrawRect(i, (space_height-h), 1, h)
 
 	destroy: =>
 		if IsValid(@chan)
