@@ -14,6 +14,11 @@ class BASSMediaType extends wyozimc.BaseMediaType
 
 			@qf!)
 
+	draw_visualization: (data)=>
+		-- TODO visualize BASS handle using FFT
+		surface.SetDrawColor(255, 127, 0)
+		surface.DrawRect(0, 0, data.w or 512, data.h or 512)
+
 	destroy: =>
 		if IsValid(@chan)
 			@chan\Stop!

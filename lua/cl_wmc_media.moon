@@ -289,6 +289,11 @@ class MediaContainer
 		if pd = @play_data
 			return bit.band(pd.flags or 0, flag) == flag
 
+	draw_vis: (data)=>
+		if pd = @play_data
+			if mt = pd.mtype
+				mt\draw_visualization(data)
+
 	volume_think: =>
 
 		-- FuncSetVol takes two arguments, cur_vol and (optionally) a sound channel

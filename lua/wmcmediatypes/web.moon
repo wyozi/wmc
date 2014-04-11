@@ -58,6 +58,15 @@ class WebMediaType extends wyozimc.BaseMediaType
 
 		query_func!
 
+	draw_visualization: (data)=>
+		with @html
+			\UpdateHTMLTexture()
+
+			mat = \GetHTMLMaterial()
+			surface.SetMaterial(mat)
+			surface.SetDrawColor(255, 255, 255)
+			surface.DrawTexturedRect(0, 0, data.w or 512, data.h or 512)
+
 	destroy: =>
 		html_pool\free(@html)
 
