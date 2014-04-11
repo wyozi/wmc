@@ -1,15 +1,3 @@
-
--- Used for wyozimc_debugvid
-wyozimc.DebugVidSlots = wyozimc.DebugVidSlots or {}
-get_free_dvs = ->
-	i = 0
-	while true
-		if not wyozimc.DebugVidSlots[i]
-			return i
-		i += 1
-
-dvs_count = 0
-
 -- For easy access
 wdebug = wyozimc.Debug
 is_valid = IsValid
@@ -204,53 +192,11 @@ class MediaContainer
 					@play_data.query_data = data,
 					(errormsg) ->
 			
+		-- Create objects etc required to play this media (this could be a HTML comp for a YT video)
 		mtype\create(query_meta)
 
+		-- Actually play the media in the media type
 		provider.PlayInMediaType mtype, @play_data
-
-		[==[
-		-- Finally, time to actually play something
-		if provider.UseGmodPlayer -- We want to use the built-in BASS
-			if cached_handle = @get_cached_bass_handle(url) -- See if there's a cached handle
-				cached_handle\Play()
-				wdebug("Playing ", url, " using a cached BASS handle")
-			else
-				-- No cache, load manually
-				sound.PlayURL url, "noplay", (chan) ->
-					if not is_valid(chan)
-						return wdebug("Invalid BASS handle received for ", url)
-
-					-- Technically is_valid(sound_channel) shouldnt happen because of @stop(), but if we somehow loaded
-					--  a new bass handle while this one was loading, we clear the new one.
-					old_chan = @sound_channel
-					if is_valid(old_chan)
-						old_chan\Stop()
-
-					-- Store soundchannel in udata
-					udata.SoundChannel = chan
-
-					-- .. and then call query_meta which gets metadata from the soundchannel
-					query_meta!
-
-					@sound_channel = chan
-					chan\Play()
-					wdebug("Playing ", url, " using BASS")
-
-		elseif provider.SetHTML -- if provider.SetHTML exists, the provider wants us to use HTML instead of an url
-			html_source = provider.SetHTML(udata, url)
-			@player_browser\SetHTML(html_source)
-			wdebug("Playing ", url, " using SetHTML")
-
-			query_meta!
-		else
-			wdebug("Translating url ", url)
-			provider.TranslateUrl udata, (url, newstartat) ->
-				udata.StartAt = udata.StartAt or newstartat -- Providers might parse startat data from the link, so this required
-				@player_browser\OpenURL(url)
-				wdebug("Playing translated ", url, " normally")
-				
-			query_meta!
-		]==]
 
 		@post_play(url, provider, udata, flags)
 		wyozimc.CallHook("WyoziMCGlobalPostPlay", self, provider, url, udata, flags)
@@ -322,41 +268,6 @@ class MediaContainer
 
 			if elapsed = @play_data.browser_vid_elapsed
 				play_data.started = CurTime() - elapsed
-
-		-- This snippet sets the debug html panel visible or hidden based on wyozimc_debugvid.
-		-- TODO it shouldn't be here
-		if is_valid(@browser_debug_comp) and @browser_debug_comp\IsVisible() ~= cvars.Bool("wyozimc_debugvid")
-
-			set_vis_state = cvars.Bool("wyozimc_debugvid")
-
-			@browser_debug_comp\SetVisible(set_vis_state)
-
-			-- Debugvids use a slot system: each musiccontainer has their own slot and these snippets are responsible
-			--  for assigning those slots. This slot system allows debugging multiple videos at once
-			--  TODO: add some kind of label to the browser panel indicating which debugvid it is
-			if set_vis_state
-				@debugvid_slot = get_free_dvs!
-				wyozimc.DebugVidSlots[@debugvid_slot] = self
-				dvs_count += 1
-			else
-				if @debugvid_slot
-					wyozimc.DebugVidSlots[@debugvid_slot] = nil
-					dvs_count -= 1
-				@debugvid_slot = nil
-
-		if @last_tracked_dvs ~= dvs_count and is_valid(@browser_debug_comp) and @browser_debug_comp\IsVisible()
-
-			if @debugvid_slot > 0 and not wyozimc.DebugVidSlots[@debugvid_slot - 1]
-				old_dvs = @debugvid_slot
-				@debugvid_slot -= 1
-				wyozimc.DebugVidSlots[old_dvs] = nil
-				wyozimc.DebugVidSlots[@debugvid_slot] = self
-
-			xpos = @debugvid_slot % 2
-			ypos = math.floor(@debugvid_slot / 2)
-			@browser_debug_comp\SetPos(xpos*512, ypos*512)
-
-			@last_tracked_dvs = dvs_count
 
 
 wyozimc.MediaContainer = MediaContainer

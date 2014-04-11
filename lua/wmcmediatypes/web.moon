@@ -37,7 +37,8 @@ class WebMediaType extends wyozimc.BaseMediaType
 			\SetPos(0, 0)
 			\SetSize(512, 512)
 
-			--\SetPaintedManually(true)
+			\SetPaintedManually(true)
+			\SetVisible(false)
 
 			\AddFunction "wmc", "SetElapsed", (elapsed) ->
 				wyozimc.Debug("Setting elapsed from browser to " .. tostring(elapsed))

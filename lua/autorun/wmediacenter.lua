@@ -37,6 +37,7 @@ AddServer("sv_wmc_storage.lua")
 
 AddClient("cl_wmc_media.lua")
 AddClient("cl_wmc_player2.lua")
+AddClient("cl_wmc_debugvid.lua")
 
 AddClient("cl_wmc_gui.lua")
 AddClient("cl_wmc_gui_medialist.lua")
