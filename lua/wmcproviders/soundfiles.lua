@@ -7,8 +7,7 @@ wyozimc.AddProvider({
 	QueryMeta = function(data, callback, failCallback)
 		local querydata = {}
 
-		-- SoundChannel valid and using recent enough version
-		if IsValid(data.mtype.chan) and data.mtype.chan.GetLength then
+		if IsValid(data.mtype.chan) then
 			querydata.Duration = data.mtype.chan:GetLength()
 		end
 
