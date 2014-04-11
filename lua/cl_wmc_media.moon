@@ -99,17 +99,7 @@ class MediaContainer
 		wyozimc.CallHook("WyoziMCGlobalPostStop", self, global_request)
 
 	destroy: =>
-		if is_valid(@player_browser)
-			@player_browser\Remove!
-		if is_valid(@player_browser_panel)
-			@player_browser_panel\Remove!
-
-			if @debugvid_slot
-				wyozimc.DebugVidSlots[@debugvid_slot] = nil
-				dvs_count -= 1
-
-		if is_valid(@sound_channel)
-			@sound_channel\Stop()
+		@stop!
 
 	create_future: =>
 		tbl = {}
