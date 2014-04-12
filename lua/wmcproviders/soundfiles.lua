@@ -15,16 +15,17 @@ end
 wyozimc.AddProvider({
 	Name = "Website",
 	UrlPatterns = all_patterns,
-	QueryMeta = function(data, callback, failCallback)
+	QueryMeta = function(udata, callback, failCallback)
 		local querydata = {}
 
+		querydata.Title = udata.WholeUrl:match( "([^/]+)$" )
+
+		callback(querydata)
+	end,
+	PostQuery = function(data)
 		if IsValid(data.mtype.chan) then
 			querydata.Duration = data.mtype.chan:GetLength()
 		end
-
-		querydata.Title = data.udata.WholeUrl:match( "([^/]+)$" )
-
-		callback(querydata)
 	end,
 	MediaType = "bass",
 	ParseUData = function(udata)

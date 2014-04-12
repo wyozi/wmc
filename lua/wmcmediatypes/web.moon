@@ -35,7 +35,8 @@ class WebMediaType extends wyozimc.BaseMediaType
 
 		with @html
 			\SetPos(0, 0)
-			\SetSize(512, 512)
+			-- 512 * (16/9) is approx. 910. Makes the browser 16:9 aspect ratio which is good for most videos
+			\SetSize(910, 512)
 
 			\SetPaintedManually(true)
 			\SetVisible(false)
@@ -66,7 +67,7 @@ class WebMediaType extends wyozimc.BaseMediaType
 			mat = \GetHTMLMaterial()
 			surface.SetMaterial(mat)
 			surface.SetDrawColor(255, 255, 255)
-			surface.DrawTexturedRect(0, 0, data.w or 512, data.h or 512)
+			surface.DrawTexturedRect(0, 0, data.w or 910, data.h or 512)
 
 	destroy: =>
 		html_pool\free(@html)

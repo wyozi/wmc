@@ -3,9 +3,9 @@ wyozimc.AddProvider({
 	UrlPatterns = {
 		"^https?://(.*)%.pls"
 	},
-	QueryMeta = function(data, callback, failCallback)
+	QueryMeta = function(udata, callback, failCallback)
 		callback({
-			Title = data.udata.WholeUrl:match( "([^/]+)$" ),
+			Title = udata.WholeUrl:match( "([^/]+)$" ),
 			Duration = -1 -- streaming
 		})
 	end,

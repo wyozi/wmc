@@ -174,8 +174,9 @@ class MediaContainer
 		query_meta = ->
 			-- If it's possible to query for data, we should do it here
 			wdebug("Querying meta for ", url, ": ", provider.QueryMeta)
+			-- QueryMeta is used to query for metadata
 			if provider.QueryMeta
-				provider.QueryMeta @play_data, (data) ->
+				provider.QueryMeta udata, (data) ->
 					wdebug("QueryData received: (title=" , data.Title, " d=", data.Duration, ")")
 					if not @play_data
 						return
@@ -183,6 +184,11 @@ class MediaContainer
 						future.done_cb(data)
 					@play_data.query_data = data,
 					(errormsg) ->
+						wdebug("QueryData failed: ", errormsg)
+
+			-- PostQuery used for queries after mtype has been created
+			if provider.PostQuery
+				provider.PostQuery @play_data
 			
 		-- Create objects etc required to play this media (this could be a HTML comp for a YT video)
 		mtype\create(query_meta)

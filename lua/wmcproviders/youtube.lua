@@ -21,8 +21,8 @@ end
 wyozimc.AddProvider({
 	Name = "Youtube",
 	UrlPatterns = all_patterns,
-	QueryMeta = function(data, callback, failCallback)
-		local uri = data.udata.Matches[1]
+	QueryMeta = function(udata, callback, failCallback)
+		local uri = udata.Matches[1]
 		
 		local url = Format("http://gdata.youtube.com/feeds/api/videos/%s?alt=json", uri)
 

@@ -48,9 +48,9 @@ wyozimc.AddProvider({
 		"^https?://www.soundcloud.com/([A-Za-z0-9_%-]+)/([A-Za-z0-9_%-]+)/?",
 		"^https?://soundcloud.com/([A-Za-z0-9_%-]+)/([A-Za-z0-9_%-]+)/?",
 	},
-	QueryMeta = function(data, callback, failCallback)
+	QueryMeta = function(udata, callback, failCallback)
 
-		local url = Format("http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s/%s&client_id=YOUR_CLIENT_ID", data.udata.Matches[1], data.udata.Matches[2])
+		local url = Format("http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s/%s&client_id=YOUR_CLIENT_ID", udata.Matches[1], udata.Matches[2])
 
 		wyozimc.Debug("Fetching query from " .. url)
 

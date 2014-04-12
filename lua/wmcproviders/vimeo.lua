@@ -4,8 +4,8 @@ wyozimc.AddProvider({
 		"^https?://www.vimeo.com/(%d*)/?",
 		"^https?://vimeo.com/(%d*)/?",
 	},
-	QueryMeta = function(data, callback, failCallback)
-		local uri = data.udata.Matches[1]
+	QueryMeta = function(udata, callback, failCallback)
+		local uri = udata.Matches[1]
 		
 		local url = Format("http://vimeo.com/api/v2/video/%s.json", uri)
 
