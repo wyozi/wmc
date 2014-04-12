@@ -1,9 +1,20 @@
+
+local raw_patterns = {
+	"^https?://(.*)%.mp3",
+	"^https?://(.*)%.ogg",
+}
+
+local all_patterns = {}
+
+-- Appends time modifier patterns to each pattern
+for k,p in pairs(raw_patterns) do
+	table.insert(all_patterns, p .. "#t=(%d+)m(%d+)s")
+	table.insert(all_patterns, p)
+end
+
 wyozimc.AddProvider({
 	Name = "Website",
-	UrlPatterns = {
-		"^https?://(.*)%.mp3",
-		"^https?://(.*)%.ogg",
-	},
+	UrlPatterns = all_patterns,
 	QueryMeta = function(data, callback, failCallback)
 		local querydata = {}
 
@@ -16,6 +27,11 @@ wyozimc.AddProvider({
 		callback(querydata)
 	end,
 	MediaType = "bass",
+	ParseUData = function(udata)
+		if udata.Matches[2] then -- Seconds
+			udata.StartAt = math.Round(tonumber(udata.Matches[2]))
+		end
+	end,
 	PlayInMediaType = function(mtype, play_data)
 		mtype:play(play_data.url)
 	end,
@@ -26,6 +42,5 @@ wyozimc.AddProvider({
 		if IsValid(mtype.chan) then
 			mtype.chan:SetVolume(volume)
 		end
-	end,
-	UseGmodPlayer = true
+	end
 })

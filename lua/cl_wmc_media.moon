@@ -98,6 +98,8 @@ class MediaContainer
 		@post_stop(global_request)
 		wyozimc.CallHook("WyoziMCGlobalPostStop", self, global_request)
 
+		table.RemoveByValue(wyozimc.DebugContainers, self)
+
 	destroy: =>
 		@stop!
 
@@ -190,6 +192,8 @@ class MediaContainer
 
 		@post_play(url, provider, udata, flags)
 		wyozimc.CallHook("WyoziMCGlobalPostPlay", self, provider, url, udata, flags)
+
+		table.insert(wyozimc.DebugContainers, self)
 
 		return future
 
