@@ -24,7 +24,7 @@ wyozimc.AddProvider({
 	end,
 	PostQuery = function(data)
 		if IsValid(data.mtype.chan) then
-			querydata.Duration = data.mtype.chan:GetLength()
+			data.query_data.Duration = data.mtype.chan:GetLength()
 		end
 	end,
 	MediaType = "bass",
@@ -34,7 +34,12 @@ wyozimc.AddProvider({
 		end
 	end,
 	PlayInMediaType = function(mtype, play_data)
-		mtype:play(play_data.url)
+		local opts = {}
+		if play_data.udata.StartAt then
+			opts.noblock = true
+			opts.startat = play_data.udata.StartAt
+		end
+		mtype:play(play_data.url, opts)
 	end,
 	TranslateUrl = function(data, callback)
 		callback(data.WholeUrl)

@@ -182,13 +182,14 @@ class MediaContainer
 						return
 					if future.done_cb
 						future.done_cb(data)
-					@play_data.query_data = data,
+					@play_data.query_data = data
+					
+					-- PostQuery used for queries after mtype has been created
+					if provider.PostQuery
+						provider.PostQuery @play_data,
 					(errormsg) ->
 						wdebug("QueryData failed: ", errormsg)
 
-			-- PostQuery used for queries after mtype has been created
-			if provider.PostQuery
-				provider.PostQuery @play_data
 			
 		-- Create objects etc required to play this media (this could be a HTML comp for a YT video)
 		mtype\create(query_meta)

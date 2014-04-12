@@ -16,6 +16,9 @@ class BASSMediaType extends wyozimc.BaseMediaType
 
 			@chan = chan
 			@loading = false
+			
+			if opts.noblock and opts.startat
+				@chan\SetTime(opts.startat)
 
 			@qf!)
 
