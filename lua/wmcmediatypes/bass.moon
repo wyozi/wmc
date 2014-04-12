@@ -4,7 +4,12 @@ class BASSMediaType extends wyozimc.BaseMediaType
 
 	play: (url, opts) =>
 		@loading = true
-		sound.PlayURL(url, "", (chan)->
+
+		sound_opts = ""
+		if opts.noblock
+			sound_opts ..= "noblock "
+
+		sound.PlayURL(url, sound_opts, (chan)->
 			if @terminateload
 				chan\Stop!
 				return
@@ -22,7 +27,7 @@ class BASSMediaType extends wyozimc.BaseMediaType
 
 		val_count = @chan\FFT(@fft_vals, FFT_1024 )
 
-		space_width = data.w or 512
+		space_width = data.w or 910
 		space_height = data.h or 512
 
 		vals_per_x = if val_count == 0
