@@ -14,7 +14,7 @@ for k,p in pairs(raw_patterns) do
 		hash_letter = "?"
 	end
 	table.insert(all_patterns, p .. hash_letter .. "t=(%d+)m(%d+)s")
-	table.insert(all_patterns, p .. hash_letter .. "t=(%d+)")
+	table.insert(all_patterns, p .. hash_letter .. "t=(%d+)s?")
 	table.insert(all_patterns, p)
 end
 
