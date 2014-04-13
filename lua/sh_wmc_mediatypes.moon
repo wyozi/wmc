@@ -13,9 +13,12 @@ wyozimc.CreateMediaType = (id) ->
 	if cls = wyozimc.MediaTypes[id]
 		return cls()
 
-for _,fil in pairs(file.Find("wmcmediatypes/*.lua", "LUA"))
-	if SERVER
-		AddCSLuaFile("wmcmediatypes/" .. fil)
+wyozimc.RefreshMediaTypes = ->
+	for _,fil in pairs(file.Find("wmcmediatypes/*.lua", "LUA"))
+		if SERVER
+			AddCSLuaFile("wmcmediatypes/" .. fil)
 
-	include("wmcmediatypes/" .. fil)
-	wyozimc.Debug("Loading mediatype ", fil)
+		include("wmcmediatypes/" .. fil)
+		wyozimc.Debug("Loading mediatype ", fil)
+
+wyozimc.RefreshMediaTypes!

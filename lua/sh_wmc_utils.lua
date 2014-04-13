@@ -116,5 +116,9 @@ if CLIENT then
 
 		frame:MakePopup()
 	end)
-
 end
+
+concommand.Add("wyozimc_refresh", function()
+	wyozimc.RefreshProviders()
+	wyozimc.RefreshMediaTypes()
+end)

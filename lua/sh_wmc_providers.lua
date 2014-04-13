@@ -60,10 +60,14 @@ function wyozimc.URLUnEscape(str)
 	end)
 end
 
-for _,fil in pairs(file.Find("wmcproviders/*.lua", "LUA")) do
-	if SERVER then
-		AddCSLuaFile("wmcproviders/" .. fil)
+function wyozimc.RefreshProviders()
+	for _,fil in pairs(file.Find("wmcproviders/*.lua", "LUA")) do
+		if SERVER then
+			AddCSLuaFile("wmcproviders/" .. fil)
+		end
+		include("wmcproviders/" .. fil)
+		wyozimc.Debug("Loading provider ", fil)
 	end
-	include("wmcproviders/" .. fil)
-	wyozimc.Debug("Loading provider ", fil)
 end
+
+wyozimc.RefreshProviders()
