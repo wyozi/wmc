@@ -29,14 +29,16 @@ class HTMLCompPool extends Pool
 
 html_pool = HTMLCompPool()
 
+-- Use 16:9 aspect ratio
+vis_pref_width, vis_pref_height = 1280, 720
+
 class WebMediaType extends wyozimc.BaseMediaType
 	create: (query_func)=>
 		@html = html_pool\obtain!
 
 		with @html
 			\SetPos(0, 0)
-			-- 512 * (16/9) is approx. 910. Makes the browser 16:9 aspect ratio which is good for most videos
-			\SetSize(910, 512)
+			\SetSize(vis_pref_width, vis_pref_height)
 
 			\SetPaintedManually(true)
 			\SetVisible(false)
@@ -65,9 +67,19 @@ class WebMediaType extends wyozimc.BaseMediaType
 			\UpdateHTMLTexture()
 
 			mat = \GetHTMLMaterial()
+
+			-- HTMLMat dimensions are constrained to powers of two, so we use UV and fraction of wanted dims and PoT dims to get correct scaling
+			
+			w_frac, h_frac = vis_pref_width / mat\Width!, vis_pref_height / mat\Height!
+
 			surface.SetMaterial(mat)
 			surface.SetDrawColor(255, 255, 255)
-			surface.DrawTexturedRect(0, 0, data.w or 910, data.h or 512)
+			--surface.DrawTexturedRect(0, 0, data.w or vis_pref_width, data.h or vis_pref_height)
+			surface.DrawTexturedRectUV(0, 0, data.w or vis_pref_width, data.h or vis_pref_height, 0, 0, w_frac, h_frac)
+
+			if cvars.Bool("wyozimc_debug")
+				surface.SetDrawColor(255, 127, 0, 20)
+				surface.DrawRect(0, 0, data.w or vis_pref_width, data.h or vis_pref_height)
 
 	destroy: =>
 		html_pool\free(@html)

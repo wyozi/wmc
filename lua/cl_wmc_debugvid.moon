@@ -4,15 +4,15 @@ local debug_rt
 
 wyozimc.DebugContainers = wyozimc.DebugContainers or {}
 
-debug_vid_width = 910/2
-debug_vid_height = 512/2
+debug_vid_width = 1280 * (2/5)
+debug_vid_height = 720 * (2/5)
 
 hook.Add "HUDPaint", "WyoziMCDebugVid", ->
 	if not cvars.Bool("wyozimc_debugvid")
 		return
 
 	if not debug_rt
-		debug_rt = GetRenderTarget("WMCDebugRT", 910, 512)
+		debug_rt = GetRenderTarget("WMCDebugRT", 1280, 720)
 
 	for k,c in pairs(wyozimc.DebugContainers)
 
@@ -26,7 +26,7 @@ hook.Add "HUDPaint", "WyoziMCDebugVid", ->
 			cam.Start2D()
 
 			do
-				c\draw_vis(w: 575, h: 512)
+				c\draw_vis{}
 
 			cam.End2D()
 
