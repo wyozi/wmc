@@ -253,14 +253,16 @@ net.Receive("wyozimc_playply", function(le, cl)
 	if not IsValid(forply) or not forply:IsPlayer() then cl:ChatPrint("Invalid forply!") return end
 
 	local wsp = net.ReadString()
+	local flags = net.ReadUInt(32)
 
-	wyozimc.PlayFor(forply, wsp)
+	wyozimc.PlayFor(forply, wsp, flags)
 end)
 
 net.Receive("wyozimc_play", function(le, cl)
 	if not wyozimc.HasPermission(cl, "PlayAll") then cl:ChatPrint("No permission!") return end
 
 	local wsp = net.ReadString()
+	local flags = net.ReadUInt(32)
 
 	local provider, udata, mediatitle
 
@@ -277,7 +279,9 @@ net.Receive("wyozimc_play", function(le, cl)
 		end
 	end
 
-	wyozimc.PlayForAll(wsp, wyozimc.FLAG_DIRECT_REQUEST)
+	flags = bit.bor(flags, wyozimc.FLAG_DIRECT_REQUEST)
+
+	wyozimc.PlayForAll(wsp, flags)
 
 	wyozimc.Debug("We should play ", mediatitle, " (", wsp , ")")
 

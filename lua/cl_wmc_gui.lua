@@ -76,7 +76,7 @@ function wyozimc.AddSimplePlayContextOptions(menu, theurl, playflags)
 
 	if wyozimc.HasPermission(LocalPlayer(), "PlayAll") then
 		menu:AddOption("Play for All", function()
-			net.Start("wyozimc_play") net.WriteString(theurl) net.SendToServer()
+			net.Start("wyozimc_play") net.WriteString(theurl) net.WriteUInt(playflags or 0, 32) net.SendToServer()
 		end):SetIcon( "icon16/control_play.png" )
 
 		local csubmenu, csmpnl = menu:AddSubMenu("Play For", function() end)
@@ -87,6 +87,7 @@ function wyozimc.AddSimplePlayContextOptions(menu, theurl, playflags)
 				net.Start("wyozimc_playply")
 					net.WriteEntity(ply)
 					net.WriteString(theurl)
+					net.WriteUInt(playflags or 0, 32)
 				net.SendToServer()
 			end)
 		end
