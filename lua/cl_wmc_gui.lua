@@ -135,6 +135,7 @@ function wyozimc.NewOpenGUI(data)
 		wyozimc.Gui:Remove()
 	end
 
+	-- If playnetmsg is valid, then this GUI is being opened from an entity which means normal permissions shouldn't matter
 	if not playnetmsg and not wyozimc.HasPermission(LocalPlayer(), "OpenGUI") then
 		wyozimc.ChatText(Color(255, 127, 0), "[MediaPlayer] ", Color(252, 84, 84), "No permission!")
 		return
@@ -219,7 +220,11 @@ function wyozimc.NewOpenGUI(data)
 		volslider:SetPos(titlex, 4)
 		volslider:SetSize(150, 18)
 		volslider:SetConVar("wyozimc_volume")
-		volslider.Label:SetSize(0)
+
+		-- Used to make the slider only have the "slider" part; no labels or anything else
+		volslider.PerformLayout = function(self)
+			self.Label:SetSize(0)
+		end
 
 		volslider.TextArea:SetEditable(false)
 		volslider.TextArea.Paint = function(pself, w, h)
