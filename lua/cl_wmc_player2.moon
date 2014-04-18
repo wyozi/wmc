@@ -72,8 +72,9 @@ hook.Add "Think", "WyoziMCMaintainMainVolume", ->
 
 -- Override some of the old global functions
 
-wyozimc.PlayUrl = (url, startat, flags) ->
+wyozimc.PlayUrl = (url, startat, flags, extras) ->
 	wyozimc.MainContainer\play_url(url, startat, flags)
+	wyozimc.MainContainer.extras = extras -- a bit hacky
 
 wyozimc.GetPlayedFraction = ->
 	wyozimc.MainContainer\get_played_fraction!
@@ -87,14 +88,14 @@ wyozimc.Stop = (global_request) ->
 net.Receive "wyozimc_play", ->
 	url = net.ReadString()
 	flags = net.ReadUInt(32)
-	extra = net.ReadTable()
+	extras = net.ReadTable()
 	
 	if url == ""
 		wyozimc.Debug("Got empty url, assuming we need to stop. Flags: " .. bit.tohex(flags))
 		wyozimc.Stop(bit.band(flags, wyozimc.FLAG_WAS_GLOBAL_REQUEST) == wyozimc.FLAG_WAS_GLOBAL_REQUEST)
 	else
 		wyozimc.Debug("Received ", url, " to play on client. Flags: " .. bit.tohex(flags))
-		wyozimc.PlayUrl(url, _, flags)
+		wyozimc.PlayUrl(url, _, flags, extras)
 
 net.Receive "wyozimc_cache", ->
 	url = net.ReadString()

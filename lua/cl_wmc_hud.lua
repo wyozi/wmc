@@ -52,10 +52,11 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 
 	local warning_msg
 
-	if wyozimc.MainContainer then
-		if wyozimc.MainContainer.browser_flash_found == false then
+	-- TODO This doesn't work due to backend changes
+	if mc then
+		if mc.browser_flash_found == false then
 			warning_msg = "Warning! No flash player found. Music might not play."
-		elseif wyozimc.MainContainer.browser_zero_elapses and wyozimc.MainContainer.browser_zero_elapses > 5 then
+		elseif mc.browser_zero_elapses and mc.browser_zero_elapses > 5 then
 			warning_msg = "Video might be blocked in your country."
 		end
 	end
@@ -80,10 +81,15 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 
 	surface.SetFont("Trebuchet18Bold")
 
-	local ts = surface.GetTextSize(qd.Title or "-unknown-")
+	local title = qd.Title or "-unknown-"
+	if mc.extras and mc.extras.Title then
+		title = mc.extras.Title
+	end
+
+	local ts = surface.GetTextSize(title)
 
 	surface.SetTextPos(w/2 - ts/2, 23)
-	surface.DrawText(qd.Title or "-unknown-")
+	surface.DrawText(title)
 
 	local progressbary = 5
 
