@@ -125,30 +125,27 @@ function wyozimc.UpdateGuis(...)
 	net.Broadcast()
 end
 
-function wyozimc.PlayFor(targ, url, ...)
+function wyozimc.PlayFor(targ, url, flag, extras)
 
-	local flagtbl = {...}
-	local flagint = 0
-	for _,v in pairs(flagtbl) do
-		flagint = bit.bor(flagint, v)
-	end
+	flag = flag or 0
+	extras = extras or {}
 
 	net.Start("wyozimc_play")
 		net.WriteString(url or "")
-		net.WriteUInt(flagint, 32)
-		net.WriteTable({})
+		net.WriteUInt(flag, 32)
+		net.WriteTable(extras)
 	if targ then net.Send(targ) else net.Broadcast() end
 
 	if not targ then
 		SetGlobalString("wmc_playurl", url or "")
-		SetGlobalInt("wmc_playflags", flagint)
+		SetGlobalInt("wmc_playflags", flag)
 		SetGlobalInt("wmc_playat", CurTime())
 	end
 
 	return true
 end
-function wyozimc.PlayForAll(url, ...)
-	return wyozimc.PlayFor(_, url, ...)
+function wyozimc.PlayForAll(url, flag, extras)
+	return wyozimc.PlayFor(_, url, flag, extras)
 end
 
 function wyozimc.CacheFor(targ, url)
@@ -282,7 +279,7 @@ net.Receive("wyozimc_play", function(le, cl)
 
 	flags = bit.bor(flags, wyozimc.FLAG_DIRECT_REQUEST)
 
-	wyozimc.PlayForAll(wsp, flags)
+	wyozimc.PlayForAll(wsp, flags, {Title = mediatitle})
 
 	wyozimc.Debug("We should play ", mediatitle, " (", wsp , ")")
 
