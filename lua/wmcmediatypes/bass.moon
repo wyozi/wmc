@@ -5,11 +5,11 @@ class BASSMediaType extends wyozimc.BaseMediaType
 	play: (url, opts) =>
 		@loading = true
 
-		sound_opts = ""
+		sound_opts = {}
 		if opts.noblock
-			sound_opts ..= "noblock "
+			table.insert(sound_opts, "noblock")
 
-		sound.PlayURL(url, sound_opts, (chan)->
+		sound.PlayURL(url, table.concat(sound_opts, " "), (chan)->
 			if @terminateload
 				chan\Stop!
 				return

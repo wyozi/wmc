@@ -13,11 +13,13 @@ wyozimc.AddProvider({
 	TranslateUrl = function(data, callback)
 		callback(data.WholeUrl)
 	end,
-	FuncSetVolume = function(volume, soundchannel)
-		if soundchannel then
-			soundchannel:SetVolume(volume)
+	FuncSetVolume = function(mtype, volume)
+		if IsValid(mtype.chan) then
+			mtype.chan:SetVolume(volume)
 		end
-		return ""
 	end,
-	UseGmodPlayer = true
+	PlayInMediaType = function(mtype, play_data)
+		local opts = {}
+		mtype:play(play_data.url, opts)
+	end,
 })

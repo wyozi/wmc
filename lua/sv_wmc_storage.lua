@@ -136,6 +136,7 @@ function wyozimc.PlayFor(targ, url, ...)
 	net.Start("wyozimc_play")
 		net.WriteString(url or "")
 		net.WriteUInt(flagint, 32)
+		net.WriteTable({})
 	if targ then net.Send(targ) else net.Broadcast() end
 
 	if not targ then
@@ -304,6 +305,7 @@ hook.Add("PlayerSay", "WyoziMCChatHooks", function( ply, text, public )
 		net.Start("wyozimc_play")
 			net.WriteString("")
 			net.WriteUInt(0, 32)
+			net.WriteTable({})
 		net.Send(ply)
 		timer.Simple(0, function() wyozimc.ChatText(ply, Color(255, 127, 0), "[MediaPlayer] ", Color(255, 255, 255), "Playing media stopped for you.") end)
 	end
