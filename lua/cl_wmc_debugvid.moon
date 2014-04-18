@@ -26,7 +26,13 @@ hook.Add "HUDPaint", "WyoziMCDebugVid", ->
 			cam.Start2D()
 
 			do
+				render.PushFilterMin(TEXFILTER.LINEAR)
+				render.PushFilterMag(TEXFILTER.LINEAR)
+
 				c\draw_vis{}
+
+				render.PopFilterMin()
+				render.PopFilterMag()
 
 			cam.End2D()
 
