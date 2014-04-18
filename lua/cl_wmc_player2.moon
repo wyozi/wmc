@@ -1,6 +1,6 @@
 export wyozimc
 
-wyozimc_enabled = CreateConVar("wyozimc_enabled", "1", FCVAR_ARCHIVE)
+wyozimc_enabled = CreateConVar("wyozimc_enabled", wyozimc.DisableByDefault and "0" or "1", FCVAR_ARCHIVE)
 wyozimc_volume = CreateConVar("wyozimc_volume", wyozimc.DefaultVolume and tostring(wyozimc.DefaultVolume) or "0.5", FCVAR_ARCHIVE)
 wyozimc_playwhenalttabbed = CreateConVar("wyozimc_playwhenalttabbed", "0", FCVAR_ARCHIVE)
 wyozimc_ignoreglobalplays = CreateConVar("wyozimc_ignoreglobalplays", "0", FCVAR_ARCHIVE)
