@@ -60,7 +60,24 @@
 			return a ? b : false;
 		})();
 
+		function getUrlParams() {
+			var query = location.search.substr(1);
+			var data = query.split("&");
+			var result = {};
+			for(var i=0; i<data.length; i++) {
+				var item = data[i].split("=");
+				result[item[0]] = item[1];
+			}
+			return result;
+		}
+		var params = getUrlParams();
+
 		console.log("[WMC] Flash detected: " + hasFlash);
+
+		if (params.forcehtml5) {
+			hasFlash = false;
+			console.log("[WMC] Forcing HTML5 player");
+		}
 
 		if (window.wmc) {
 			wmc.SetFlashStatus(hasFlash == false ? false : true);
@@ -74,20 +91,8 @@
 					allowscriptaccess=\"always\"\
 				/>";
 			else
-				document.getElementById("playerdiv").innerHTML = "<iframe src=\"http://www.youtube.com/embed/" + id + "\"\
-					width=\"320\" height=\"190\"></iframe>";
+				document.getElementById("playerdiv").innerHTML = "<iframe src=\"http://www.youtube.com/embed/" + id + "?autoplay=1&start=" + (start || 0) + " \" width=\"100%\" height=\"100%\"></iframe>";
 		}
-		function getUrlParams() {
-			var query = location.search.substr(1);
-			var data = query.split("&");
-			var result = {};
-			for(var i=0; i<data.length; i++) {
-				var item = data[i].split("=");
-				result[item[0]] = item[1];
-			}
-			return result;
-		}
-		var params = getUrlParams();
 		if (params.vid)
 			playVideo(params.vid, params.start);
 	</script>
