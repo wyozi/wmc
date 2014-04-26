@@ -1,0 +1,1 @@
+Youtube, Vimeo and other media types relying on flash player use a different volume setting from Garry's Mod volume. To change that, you need to go to Windows sound mixer and change the volume of "Awesomium Core".
