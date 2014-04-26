@@ -10,6 +10,11 @@ class BASSMediaType extends wyozimc.BaseMediaType
 			table.insert(sound_opts, "noblock")
 
 		sound.PlayURL(url, table.concat(sound_opts, " "), (chan)->
+			if not IsValid(chan)
+				wyozimc.Debug("Failed to play sound!")
+				@loading = false
+				return
+
 			if @terminateload
 				chan\Stop!
 				return
