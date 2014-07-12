@@ -7,7 +7,7 @@ map_bass_error = (errid, errname)->
 		when 41
 			"Invalid format; try another quality/filetype?"
 		else
-			"#{error_code} #{error_name}"
+			"#{errid} #{errname}"
 
 class BASSMediaType extends wyozimc.BaseMediaType
 	create: (query_func, mc)=>
