@@ -1,6 +1,18 @@
+map_bass_error = (errid, errname)->
+	return switch errid
+		when 2
+			"Failed to open soundfile at URL"
+		when 40
+			"Timed out; try again later"
+		when 41
+			"Invalid format; try another quality/filetype?"
+		else
+			"#{error_code} #{error_name}"
+
 class BASSMediaType extends wyozimc.BaseMediaType
-	create: (query_func)=>
+	create: (query_func, mc)=>
 		@qf = query_func
+		@mc = mc
 
 	play: (url, opts) =>
 		@loading = true
@@ -10,10 +22,17 @@ class BASSMediaType extends wyozimc.BaseMediaType
 		if opts.noblock
 			table.insert(sound_opts, "noblock")
 
-		sound.PlayURL(url, table.concat(sound_opts, " "), (chan)->
-			if not IsValid(chan)
-				wyozimc.Debug("Failed to play sound!")
+		sound.PlayURL(url, table.concat(sound_opts, " "), (chan, error_code, error_name)->
+			if error_code or error_name
 				@loading = false
+				wyozimc.Debug("Failed to play sound: #{error_code} #{error_name}!")
+				@mc\show_error("ERROR: #{map_bass_error(error_code, error_name)}")
+				return
+
+			if not IsValid(chan)
+				@loading = false
+				wyozimc.Debug("Failed to play sound: invalid soundchan!")
+				@mc\show_error("ERROR: SoundChan invalid!")
 				return
 
 			if @terminateload

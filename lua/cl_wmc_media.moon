@@ -192,7 +192,7 @@ class MediaContainer
 
 			
 		-- Create objects etc required to play this media (this could be a HTML comp for a YT video)
-		mtype\create(query_meta)
+		mtype\create(query_meta, self)
 
 		-- Actually play the media in the media type
 		provider.PlayInMediaType mtype, @play_data
