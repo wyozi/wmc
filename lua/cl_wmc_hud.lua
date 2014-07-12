@@ -61,6 +61,10 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 		end
 	end
 
+	if pd.error_msg then
+		warning_msg = pd.error_msg
+	end
+
 	local hh = warning_msg and 70 or 50
 
 	local clr = hud_background_color

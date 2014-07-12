@@ -241,6 +241,14 @@ class MediaContainer
 			if mt = pd.mtype
 				mt\draw_visualization(data)
 
+	-- Displays an error message and stops the media after ´timeout´ seconds
+	show_error: (msg, timeout=5)=>
+		if pd = @play_data
+			pd.error_msg = msg
+			timer.Simple(timeout, ()->
+				@stop!)
+			wdebug("Stopping media because of error message: #{msg}")
+
 	volume_think: =>
 
 		-- FuncSetVol takes two arguments, cur_vol and (optionally) a sound channel

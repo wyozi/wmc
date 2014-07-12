@@ -6,6 +6,7 @@ class BASSMediaType extends wyozimc.BaseMediaType
 		@loading = true
 
 		sound_opts = {}
+		-- If we need to go to XX:XX mark in the media file, we need a noblock flag
 		if opts.noblock
 			table.insert(sound_opts, "noblock")
 
@@ -22,8 +23,9 @@ class BASSMediaType extends wyozimc.BaseMediaType
 			@chan = chan
 			@loading = false
 			
-			if opts.noblock and opts.startat
-				@chan\SetTime(opts.startat)
+			-- BROKEN
+			--if opts.noblock and opts.startat
+			--	@chan\SetTime(opts.startat)
 
 			@qf!)
 
@@ -33,7 +35,7 @@ class BASSMediaType extends wyozimc.BaseMediaType
 		if not IsValid(@chan)
 			return
 
-		val_count = @chan\FFT(@fft_vals, FFT_1024 )
+		val_count = @chan\FFT(@fft_vals, FFT_1024)
 
 		space_width = data.w or 910
 		space_height = data.h or 512
