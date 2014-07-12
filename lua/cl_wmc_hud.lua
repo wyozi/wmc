@@ -113,11 +113,16 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 	local pd = mc.play_data
 	if not pd then return end
 
-	local qd = pd.query_data
-	if not qd then return end
+	local error_msg
+	local title = "-unknown-"
+	local elapsed = 0
+	local gonefrac = 0
 
-	local elapsed = ( CurTime() - pd.started )
-	local gonefrac = mc:get_played_fraction()
+	local qd = pd.query_data
+	if qd then
+		elapsed = ( CurTime() - pd.started )
+		gonefrac = mc:get_played_fraction()
+	end
 
 	local targetalpha = (gonefrac < 1) and 1 or 0
 	delayalpha = math.Approach(delayalpha, targetalpha, 0.02)
@@ -125,8 +130,6 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 	if delayalpha <= 0 then
 		return
 	end
-
-	local error_msg, title
 
 	-- Possibly get an error message we should show
 	do
@@ -144,7 +147,9 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 		end
 	end
 
-	title = qd.Title or "-unknown-"
+	if qd then
+		title = qd.Title or "-unknown-"
+	end
 	if mc.extras and mc.extras.Title then
 		title = mc.extras.Title
 	end
@@ -153,7 +158,7 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 	local hw = 350	
 
 	local prog_lbl = wyozimc.FormatTime(elapsed)
-	if qd.Duration and qd.Duration ~= -1 then
+	if qd and qd.Duration and qd.Duration ~= -1 then
 		prog_lbl = prog_lbl .. " / " .. wyozimc.FormatTime(qd.Duration)
 	end
 
