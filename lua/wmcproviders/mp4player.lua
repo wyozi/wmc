@@ -1,9 +1,8 @@
 
 wyozimc.AddProvider({
-	Name = "MP4/FLV Player",
+	Name = "MP4 Player",
 	UrlPatterns = {
 		"^https?://(.*)%.mp4",
-		"^https?://(.*)%.flv",
 	},
 	QueryMeta = function(data, callback, failCallback)
 		callback({
@@ -12,6 +11,13 @@ wyozimc.AddProvider({
 	end,
 	SetHTML = function(data, url)
 		local startat = (data.StartAt or 0)
+		
+		return hotomolo
+	end,
+	MediaType = "web",
+	PlayInMediaType = function(mtype, play_data)
+		local data = play_data.udata
+
 		local hotomolo = [[<!DOCTYPE html><html><head>
 <script src="http://releases.flowplayer.org/js/flowplayer-3.2.12.min.js"></script>
 </head><body>
@@ -25,8 +31,8 @@ wyozimc.AddProvider({
 			},
 			playlist: [
 				{
-					url: "]] .. url .. [[",
-					start: ]] .. startat .. [[
+					url: "]] .. data.WholeUrl .. [[",
+					start: 0
 				}
 			],
     		replayLabel: 'Finished'
@@ -40,9 +46,10 @@ wyozimc.AddProvider({
 		}
 	</script>
 </body></html>]]
-		return hotomolo
+
+		mtype.html:SetHTML(hotomolo)
 	end,
-	FuncSetVolume = function(volume)
-		return "setVideoVolume(" .. tostring(volume) .. ")"
+	FuncSetVolume = function(mtype, volume)
+		mtype.html:RunJavascript("setVideoVolume(" .. tostring(volume) .. ")")
 	end
 })

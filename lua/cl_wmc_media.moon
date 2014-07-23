@@ -186,9 +186,8 @@ class MediaContainer
 					
 					-- PostQuery used for queries after mtype has been created
 					if provider.PostQuery
-						provider.PostQuery @play_data,
-					(errormsg) ->
-						wdebug("QueryData failed: ", errormsg)
+						provider.PostQuery @play_data, (errormsg) ->
+							wdebug("QueryData failed: ", errormsg)
 
 			
 		-- Create objects etc required to play this media (this could be a HTML comp for a YT video)
