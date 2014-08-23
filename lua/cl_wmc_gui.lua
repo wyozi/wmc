@@ -52,8 +52,8 @@ function wyozimc.CreateButtonPainter(datatbl)
 		surface.DrawOutlinedRect(0, 0, w, h)
 
 		draw.SimpleText(pself:GetText(), "DermaDefault", w/2, h/2,
-			(pself:GetDisabled()) and (Color(200, 200, 200, 100)) or (datatbl.text_clr or clr_black)
-			, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			(pself:GetDisabled()) and (Color(200, 200, 200, 100)) or (datatbl.text_clr or clr_black),
+			TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 		return true
 	end
@@ -204,6 +204,11 @@ function wyozimc.NewOpenGUI(data)
 
 			stopbtn:SetTooltip("Stop media for everyone")
 
+			stopbtn.PaintOver = function(self, w, h)
+				surface.SetMaterial(Material("icon16/group.png"))
+				surface.DrawTexturedRect(7, 7, 11, 11)
+			end
+
 			if playnetmsg then
 				stopbtn.DoClick = function()
 					net.Start(playnetmsg) net.WriteString("") net.WriteEntity(passent) net.SendToServer()
@@ -216,6 +221,8 @@ function wyozimc.NewOpenGUI(data)
 				stopbtn:SetVisible(false) -- asd
 			end
 		end
+
+		titlex = titlex + 6
 
 		local volslider = frame:Add("DNumSlider")
 		volslider:SetPos(titlex, 4)
