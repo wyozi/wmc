@@ -24,6 +24,7 @@ function wyozimc.PaintFrame(pself, w, h)
 	surface.SetTextColor(255, 255, 255, 200)
 	surface.SetFont("Trebuchet18")
 
+	-- Modifying this doesn't actually make the script more unique to your server
 	local txt = "Wyozi Media Center"
 
 	local ts = surface.GetTextSize(txt)
