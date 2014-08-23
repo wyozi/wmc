@@ -62,6 +62,7 @@ end
 wyozimc.ServerMediaList = wyozimc.CreateManipulator{persist_file = "wyozimedia.txt", unique = "Link", table_reference = wyozimc.MediaList, data_source = sql_data_source}
 wyozimc.ServerMediaList:Load()
 
+-- If using mysql, reload server media list every couple of minutes automatically
 if wyozimc.UseDatabaseStorage then
 	timer.Create("WyoziMCDBUpdater", 120, 0, function()
 		wyozimc.ServerMediaList:Load()
@@ -71,20 +72,20 @@ end
 function wyozimc.AddMedia(link, by)
 	link = link:Trim()
 	if wyozimc.GetMediaByLink(link) then
-		by:ChatPrint("Media already found in Media List")
+		by:ChatPrint("Media already exists in the media list.")
 		return
 	end
 	local provider, udata = wyozimc.FindProvider(link)
 	if not provider then
-		by:ChatPrint("Trying to add link with no valid provider")
+		by:ChatPrint("Trying to add a link with invalid provider")
 		return
 	end
 
-	local bystr = ""
+	local bystr
 	if not by then
-		bystr = "|UNKNOWN"
+		bystr = "|Console"
 	elseif type(by) == "string" then
-		bystr = by .. "|NotOnServer" -- Assume that by is SteamID if it's not a player object
+		bystr = by .. "|NotOnServer" -- Assume that by is a SteamID if it's a string
 	else
 		bystr = by:SteamID() .. "|" .. by:Nick()
 	end
@@ -285,14 +286,12 @@ net.Receive("wyozimc_play", function(le, cl)
 
 	if wsp == "" then
 		wyozimc.ChatText(_, Color(255, 127, 0), "[MediaPlayer] ", cl, Color(255, 255, 255), " stopped all playing media.")
+	elseif mediatitle then
+		wyozimc.ChatText(_, Color(255, 127, 0), "[MediaPlayer] ", cl, Color(255, 255, 255), " is playing ", Color(252, 84, 84), mediatitle, Color(255, 255, 255), ". " .. (wyozimc.LocalStopCommand and ("Type " .. tostring(wyozimc.LocalStopCommand) .. " to stop.") or ""))
 	else
-		if mediatitle then
-			wyozimc.ChatText(_, Color(255, 127, 0), "[MediaPlayer] ", cl, Color(255, 255, 255), " is playing ", Color(252, 84, 84), mediatitle, Color(255, 255, 255), ". " .. (wyozimc.LocalStopCommand and ("Type " .. tostring(wyozimc.LocalStopCommand) .. " to stop.") or ""))
-		else
-			provider.QueryMeta(udata, function(data)
-				wyozimc.ChatText(_, Color(255, 127, 0), "[MediaPlayer] ", cl, Color(255, 255, 255), " is playing ", Color(252, 84, 84), data.Title, Color(255, 255, 255), ". " .. (wyozimc.LocalStopCommand and ("Type " .. tostring(wyozimc.LocalStopCommand) .. " to stop.") or ""))
-			end, function(errormsg) end)
-		end
+		provider.QueryMeta(udata, function(data)
+			wyozimc.ChatText(_, Color(255, 127, 0), "[MediaPlayer] ", cl, Color(255, 255, 255), " is playing ", Color(252, 84, 84), data.Title, Color(255, 255, 255), ". " .. (wyozimc.LocalStopCommand and ("Type " .. tostring(wyozimc.LocalStopCommand) .. " to stop.") or ""))
+		end, function(errormsg) end)
 	end
 end)
 
