@@ -4,6 +4,8 @@ Wyozi Media Center is an addon for Garry's Mod, that adds extensive media playin
 
 # Installation
 
-Some of the WMC files use [MoonScript](http://moonscript.org/reference/command_line.html). You can download MoonScript compiler binaries for Windows from http://moonscript.org/bin/moonscript-0.2.6.zip.
+Simplest way to get WMC is to download the latest version from https://github.com/wyozi/wmc/releases.
 
-You can run ```make.bat``` to compile all MoonScript files in WMC.
+If you want to use the latest version on git, you'll need to download [MoonScript](http://moonscript.org/) compiler. You can download the compiler binaries for Windows from http://moonscript.org/bin/moonscript-0.2.6.zip.
+
+Run ```make.bat``` to compile all MoonScript files in WMC.
