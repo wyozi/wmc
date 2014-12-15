@@ -1,62 +1,21 @@
--- For easy access
+-- Now this is the good stuff.
+-- MediaContainer class below is an abstract container, which can be used to create your own media players of all sorts.
+
+
+-- For fast n' easy access
 wdebug = wyozimc.Debug
 is_valid = IsValid
 
 -- MediaContainer is a full fledged media player. Used to make it easy to spawn new media players for darkrp entities or whatever.
--- MediaContainer should be extended.
+-- MediaContainer should be extended by your own class. See cl_wmc_player2.moon for an example
 class MediaContainer
-	verify_components_exist: =>
-		if not is_valid @player_browser_panel
-			browser_panel = vgui.Create("DPanel")
-			with browser_panel
-				\SetPos(0, 0)
-				\SetSize(@custom_browser_width or 512, @custom_browser_height or 287)
-				\SetVisible(false)
-			@player_browser_panel = browser_panel
-
-		if not is_valid @player_browser
-			browser = vgui.Create("DHTML", @player_browser_panel)
-			with browser
-				\SetPos(0, 0)
-				\SetSize(@player_browser_panel\GetSize())
-
-				\SetPaintedManually(true)
-
-				\AddFunction "wmc", "SetElapsed", (elapsed) ->
-					wyozimc.Debug("Setting elapsed from browser to " .. tostring(elapsed))
-					if elapsed < 1
-						@browser_zero_elapses += 1
-					else
-						@browser_zero_elapses = 0
-
-					if @play_data
-						@play_data.browser_vid_elapsed = math.Round(elapsed)
-
-				\AddFunction "wmc", "UnableToPlay", (reason) ->
-					wyozimc.Debug("Unable to play media because " .. tostring(reason))
-
-				\AddFunction "wmc", "SetFlashStatus", (bool) ->
-					@browser_flash_found = bool
-					wyozimc.Debug("Setting flash status to " .. tostring(bool))
-
-				@add_browser_funcs(browser)
-					
-				--\QueueJavascript [[var hasFlash = false;
-				--	try {
-				--	  var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
-				--	  if(fo) hasFlash = true;
-				--	}catch(e){
-				--	  if(navigator.mimeTypes ["application/x-shockwave-flash"] != undefined) hasFlash = true;
-				--	}
-				--	gmod.SetFlashStatus(hasFlash)]]
-
-			@player_browser = browser
-
 	add_browser_funcs: (browser) =>
 
 	-- == HOOK METHODS == These should be overridden for additional functionality
 
-	-- Return true here to prevent starting media
+	--- Verifies that url can be played (name is misleading, yeah)
+	-- @return prevent_play Should the media be prevented from playing
+	-- @return reason If media player was prevented, why. Optional
 	handle_flags: (url, flags) =>
 
 	-- Return true here to prevent starting media
@@ -77,7 +36,7 @@ class MediaContainer
 
 	-- If you want to cache BASS handles, this'd be a good place to return them It's assumed that bass handles
 	--  are cleared after being return from here
-	get_cached_bass_handle: (url) => 
+	get_cached_bass_handle: (url) =>
 
 	-- == END HOOK METHODS ==
 
@@ -109,13 +68,26 @@ class MediaContainer
 			tbl.done_cb = callback
 		return tbl
 
-	play_url: (url, startat, flags = 0) =>
+	--- Can a media be played
+	can_play: (url, flags)=>
 		if not cvars.Bool("wyozimc_enabled")
-			return wyozimc.Debug("play_url prevented because wmc disabled")
-		handled_res, reason  = @handle_flags(url, flags)
-		if handled_res == true
-			wdebug("Play prevented in handle_flags for ", url, ": ", reason)
-			return
+			return false, "wmc is disabled"
+
+		play_prevented, reason  = @handle_flags(url, flags)
+		if play_prevented == true
+			return false, reason
+
+		return true
+
+	--- Actually play a media file
+	-- @param url Url to play
+	-- @param startat The time to start the media at in seconds. Not guaranteed
+	-- to work with all providers
+	-- @param flags Optional flags. See sh_wmc_utils.lua
+	play_url: (url, startat, flags = 0) =>
+		play_prevented, reason = @can_play(url, flags)
+		if play_prevented
+			return wyozimc.Debug("Prevented playing #{url} because #{reason}")
 
 		-- Get the provider (e.g. YouTube or Vimeo) and data related to the provider
 		provider, udata = wyozimc.FindProvider(url)
@@ -151,7 +123,7 @@ class MediaContainer
 
 		-- Make a new table containing new play data
 		@play_data =
-			started: CurTime() - startat, 
+			started: CurTime() - startat,
 			real_started: CurTime(),
 			url: url,
 			startat: startat,
@@ -163,9 +135,6 @@ class MediaContainer
 		@browser_zero_elapses = 0
 
 		wdebug("Playing ", url, " with flags ", bit.tohex(flags), " & startat ", startat)
-
-		-- Verify that the browser actually exists
-		@verify_components_exist!
 
 		-- To be returned from this function
 		future = @create_future!
@@ -183,13 +152,13 @@ class MediaContainer
 					if future.done_cb
 						future.done_cb(data)
 					@play_data.query_data = data
-					
+
 					-- PostQuery used for queries after mtype has been created
 					if provider.PostQuery
 						provider.PostQuery @play_data, (errormsg) ->
 							wdebug("QueryData failed: ", errormsg)
 
-			
+
 		-- Create objects etc required to play this media (this could be a HTML comp for a YT video)
 		mtype\create(query_meta, self)
 
@@ -203,24 +172,17 @@ class MediaContainer
 
 		return future
 
-	query_elapsed: =>
-		if not is_valid(@player_browser)
-			return
-			
-		if pd = @play_data
-			if fqe = pd.provider.FuncQueryElapsed
-				@player_browser\Call(fqe!)
-
-	-- A number from 0 to 1, which is the percentage how far we are into the video
+	--- Returns a number from 0 to 1, which is the percentage how much of the
+	-- media file is played. Returns -1, if it cannot be determined.
 	get_played_fraction: =>
-		play_data = @play_data
-		if not play_data
-			return
+		if pd = @play_data
+			if qd = pd.query_data
+				if not qd.Duration or qd.Duration == -1
+					return -1
 
-		if qd = play_data.query_data -- This sets qd to query_data if play_data is valid and has query_data
-			elapsed_time = ( CurTime() - play_data.started )
-			total_frac = qd.Duration == -1 and 0 or ( elapsed_time / (qd.Duration or 0) )
-			return total_frac
+				elapsed_time = (CurTime() - pd.started)
+				return (elapsed_time / qd.Duration)
+		return -1
 
 	is_playing: =>
 		if pf = @get_played_fraction!
@@ -235,12 +197,16 @@ class MediaContainer
 		if pd = @play_data
 			return bit.band(pd.flags or 0, flag) == flag
 
+	--- Draws visualization of media. Visualization is a rectangle with
+	-- x: 0, y: 0, width: (data.w or internal value), height: (data.h or internal value)
+	-- @param data Visualization parameters. Common keys: 'w' for width, 'h' for height
 	draw_vis: (data)=>
 		if pd = @play_data
 			if mt = pd.mtype
 				mt\draw_visualization(data)
 
-	-- Displays an error message and stops the media after ´timeout´ seconds
+	--- Displays an error message and stops the media after ´timeout´ seconds
+	-- @param msg Error message to show on HUD
 	show_error: (msg, timeout=5)=>
 		if pd = @play_data
 			pd.error_msg = msg
@@ -248,6 +214,8 @@ class MediaContainer
 				@stop!)
 			wdebug("Stopping media because of error message: #{msg}")
 
+	--- The function that updates the media container's volume from local volume
+	-- Just call this function in a Think hook or equivalent.
 	volume_think: =>
 
 		-- FuncSetVol takes two arguments, cur_vol and (optionally) a sound channel

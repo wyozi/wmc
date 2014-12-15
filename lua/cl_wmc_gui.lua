@@ -1,4 +1,40 @@
+--[[
+	Handles the main GUI and its operations.
 
+	Open GUI:
+		Call wyozimc.NewOpenGUI(). It takes a table as a parameter, but that's
+		not normally needed
+
+	Skinning:
+		WMC uses a really hacky way to skin DFrames, DButtons etc. Whenever one
+		of those components is created, its Paint function is overridden with a
+		WMC painting function. Yes, this is terrible, but works for now.
+
+	Opening GUI from an entity:
+		To allow playing media files from entities using the WMC GUI, WMC uses a
+		disgusting "playnetmsg" system, where the entity and a net message id
+		name is passed to wyozimc.NewOpenGui(). When a media is played, instead
+		of using the core WMC player the GUI sends a net message to the speci-
+		fied net message id, which is the parameter "playnetmsg".
+
+		This way of doing it is disgusting. If you for some reason want to use
+		it, either find a copy of WMC: DarkRP entities code to look at or con-
+		tact me on Steam.
+
+	Media list cache:
+		To prevent sending the whole media list every time user opens WMC menu,
+		WMC automatically caches the whole received media list to two varibles:
+
+		wyozimc.GuiMediaCache contains all received media
+		wyozimc.AllLines contains all received media as well, but is dynamically
+		modified based on the search query in media list.
+
+		TODO: move AllLines stuff to cl_wmc_gui_medialist.lua. We could create a
+		hook (ex. WMCMediaReceived) whenever a media list is received, and then
+		listen to that hook in medialist.lua and use an internal cache.
+]]
+
+-- Skin color constants. Feel free to change
 local frame_background = Color(255, 255, 255)
 local frame_outline = Color(127, 127, 127)
 local frame_title_background = Color(0, 50, 0, 200)
@@ -10,8 +46,8 @@ local btn_green_disabled_hovered = Color(120, 180, 120, 160)
 
 local clr_black = Color(0, 0, 0)
 
+--- DFrame skinning function
 function wyozimc.PaintFrame(pself, w, h)
-
 	surface.SetDrawColor(frame_background)
 	surface.DrawRect(0, 0, w, h)
 
@@ -37,6 +73,7 @@ function wyozimc.PaintFrame(pself, w, h)
 	end
 end
 
+--- DButton skinning function
 function wyozimc.CreateButtonPainter(datatbl)
 	datatbl = datatbl or {}
 	return function(pself, w, h)
@@ -60,9 +97,13 @@ function wyozimc.CreateButtonPainter(datatbl)
 	end
 end
 
--- DEPRECATED!
+-- DEPRECATED! Call CreateButtonPainter directly with data you need
 wyozimc.PaintGreenButton = wyozimc.CreateButtonPainter()
 
+--- Adds common context menu options for a media
+-- @param menu The context menu created with DermaMenu()
+-- @param theurl The media URL
+-- @param playflags Optional flags. See sh_wmc_utils.lua
 function wyozimc.AddSimplePlayContextOptions(menu, theurl, playflags)
 	playflags = playflags or 0
 	menu:AddOption("Play", function()
@@ -123,7 +164,7 @@ function wyozimc.RequestMediaListUpdate()
 	net.SendToServer()
 end
 
--- Media received from the server is stored in this table. 
+-- Media received from the server is stored in this table.
 wyozimc.AllLines = {}
 
 function wyozimc.NewOpenGUI(data)
@@ -142,7 +183,7 @@ function wyozimc.NewOpenGUI(data)
 		wyozimc.ChatText(Color(255, 127, 0), "[MediaPlayer] ", Color(252, 84, 84), "No permission!")
 		return
 	end
-	
+
 	local frame = vgui.Create("DFrame")
 	frame.Paint = wyozimc.PaintFrame
 	frame:SetTitle("")
@@ -294,7 +335,7 @@ net.Receive("wyozimc_edit", function()
 	local tt = net.ReadString()
 
 	-- When something is edited in the media list on server, the server sends "wyozimc_edit" net message with "requpd"
-	--  payload to everyone. Then each of the clients check if they have the wyozimc media list open, and if it's open 
+	--  payload to everyone. Then each of the clients check if they have the wyozimc media list open, and if it's open
 	--  we send server back a net message where we request for update to the media list. This prevents unnecessary (big)
 	--  payloads with the full media list, if the clients don't actually need it.
 	if tt == "requpd" and IsValid(wyozimc.Gui) then

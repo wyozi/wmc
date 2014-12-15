@@ -1,4 +1,17 @@
--- Table manipulation library
+--[[
+	Table manipulation class.
+
+	In other words it is a wrapper on top of table, which logs changes to a file,
+	to a database or to server using net messages.
+
+	Proxy manipulator is a client side tablemanip that sends changes to server.
+
+	In WMC core only used to send media list over network.
+
+	TODO: move CRC checks etc to this file from media list
+	TODO: make file data source second class citizen, ie. add a table or member
+		  DataSource and set it to file source by default
+]]
 
 wyozimc.manip_meta = {
 	Init = function(self)
@@ -73,7 +86,7 @@ wyozimc.manip_meta = {
 wyozimc.manip_proxy_meta = {
 	Init = function(self)
 		self.Table = self.Table or {}
-		-- Assume there is only one of these existing on CLIENT/SERVER side or where we're calling this from
+		-- Assume there only exists one tablemanip per realm per net message id
 		net.Receive(self.net_message_id, function()
 			self:SetTable(net.ReadTable(), true)
 			wyozimc.Debug("Received table to TableManipulator Proxy ", self.net_message_id, ", #", #self.Table)
@@ -87,7 +100,7 @@ wyozimc.manip_proxy_meta = {
 	end,
 	Save = function(self, action, ...)
 		net.Start(self.net_message_id)
-			net.WriteTable(self.Table) -- TODO optimize action by action
+			net.WriteTable(self.Table) -- TODO send delta instead of whole thing
 		net.SendToServer()
 	end,
 }
@@ -107,9 +120,12 @@ end
 
 function wyozimc.CreateProxyManipulator(settings)
 	local tbl = {}
-	setmetatable(tbl, {__index = function(self, k)
-		return wyozimc.manip_proxy_meta[k] or wyozimc.manip_meta[k]
-	end})
+	setmetatable(tbl, {
+		-- tbl extends ProxyManipulator extends Manipulator
+		__index = function(self, k)
+			return wyozimc.manip_proxy_meta[k] or wyozimc.manip_meta[k]
+		end
+	})
 
 	tbl.net_message_id = settings.net_message_id
 	tbl.unique = settings.unique

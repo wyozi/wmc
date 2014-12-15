@@ -20,22 +20,21 @@ function wyozimc.FindProvider(url)
 				end
 				return provider, udata
 			end
-		end 
+		end
 	end
 
 	return nil
 end
 
--- Not sure what this does but some black magic for sure
+-- These functions were taken from somewhere. Credits to whoever it was
 function wyozimc.JSEscape(str)
 	return str:gsub("\\", "\\\\"):gsub("\"", "\\\""):gsub("\'", "\\'")
 		:gsub("\r", "\\r"):gsub("\n", "\\n")
 end
-
 function wyozimc.URLEscape(s)
 	s = tostring(s)
 	local new = ""
-	
+
 	for i = 1, #s do
 		local c = s:sub(i, i)
 		local b = c:byte()
@@ -47,11 +46,9 @@ function wyozimc.URLEscape(s)
 			new = new .. string.format("%%%X", b)
 		end
 	end
-	
+
 	return new
 end
-
-
 function wyozimc.URLUnEscape(str)
 	return str:gsub("%%([A-Fa-f0-9][A-Fa-f0-9])", function(m)
 		local n = tonumber(m, 16)

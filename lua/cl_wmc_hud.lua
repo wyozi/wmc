@@ -1,6 +1,5 @@
 
--- CHANGE SETTINGS BELOW TO CHANGE PLAYER HUD APPEARANCE
-
+-- HUD color constants. Feel free to change
 local hud_background_color = Color(50, 50, 50, 50)
 
 local hud_drawoutline = false
@@ -13,15 +12,14 @@ local hud_progressbar_color = Color(136, 196, 252)
 local hud_progressbar_drawoutline = false
 local hud_progressbar_outline_color = Color(255, 255, 255, 255)
 
--- END OF SETTINGS YOU SHOULD CHANGE
-
-local delayalpha = 0
-
 surface.CreateFont("Trebuchet18Bold", {
 	font = "Trebuchet18",
 	size = 18,
 	weight = 500,
 })
+
+--- Used to track HUD alpha in fade in/fade out phases.
+local delayalpha = 0
 
 local hud_cache
 
@@ -155,7 +153,7 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 	end
 
 	local w, h = ScrW(), ScrH()
-	local hw = 350	
+	local hw = 350
 
 	local prog_lbl = wyozimc.FormatTime(elapsed)
 	if qd and qd.Duration and qd.Duration ~= -1 then
@@ -174,5 +172,5 @@ hook.Add("HUDPaint", "WyoziMCDefaultHUD", function()
 		progress = gonefrac,
 		progress_label = prog_lbl
 	}
-	
+
 end)

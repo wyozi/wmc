@@ -1,3 +1,7 @@
+--[[
+	Contains GUI components and utilities to display list of media files
+]]
+
 
 -- This is the panel shown in the "Gutter" column of media list (the first column with icons etc)
 function wyozimc.CreateGutterPanel(v)
@@ -99,10 +103,10 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 		wyozimc.AddPlayContextOptions(menu, frame, theurl, playnetmsg, passent)
 
 		menu:AddSpacer()
-		
+
 		if wyozimc.HasPermission(LocalPlayer(), "Delete") then
 			menu:AddOption("Delete", function()
-				net.Start("wyozimc_edit") net.WriteString("del") net.WriteString(theurl) net.SendToServer() 
+				net.Start("wyozimc_edit") net.WriteString("del") net.WriteString(theurl) net.SendToServer()
 			end):SetIcon( "icon16/delete.png" )
 		end
 		if wyozimc.HasPermission(LocalPlayer(), "Edit") then
@@ -113,7 +117,7 @@ hook.Add("WyoziMCTabs", "WyoziMCAddMediaList", function(tabs, playnetmsg, passen
 					function(text)
 						net.Start("wyozimc_edit") net.WriteString("rename") net.WriteString(theurl) net.WriteString(text) net.SendToServer()
 					end
-				) 
+				)
 			end):SetIcon( "icon16/book_edit.png" )
 		end
 

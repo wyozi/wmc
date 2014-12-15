@@ -1,3 +1,4 @@
+-- Adds some WMC related config stuff to Sandbox menu
 
 function wyozimc.ToolSettingsMenu(panel)
 	panel:AddControl("CheckBox", {Label = "Enable WMC", Command = "wyozimc_enabled"})

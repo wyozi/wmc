@@ -1,5 +1,8 @@
+--[[
+	Contains the "Settings" tab in WMC GUI. See end of the "WyoziMCTabs" hook for how to add your own setting entries.
+]]
 
-local wyozimc_dontshownews = CreateConVar("wyozimc_dontshownews", "0", FCVAR_ARCHIVE) 
+local wyozimc_dontshownews = CreateConVar("wyozimc_dontshownews", "0", FCVAR_ARCHIVE)
 
 hook.Add("WyoziMCTabs", "WyoziMCAddSettingsTab", function(dtabs)
 
@@ -36,6 +39,20 @@ hook.Add("WyoziMCTabs", "WyoziMCAddSettingsTab", function(dtabs)
 	end
 
 	wyozimc.CallHook("WyoziMCAddToSettings", dsettings)
+	--[[
+		Example custom setting group:
+
+		hook.Add("WyoziMCAddToSettings", "Example", function(dsettings)
+			local dgui = vgui.Create("DForm", dsettings)
+			dgui:SetName("Example settings")
+
+			dgui:CheckBox("Checkbox", "example_cvar")
+
+			dsettings:AddItem(dgui)
+		end)
+
+		See http://wiki.garrysmod.com/page/Category:DForm
+	]]
 
 	dtabs:AddSheet( "Settings", dsettings, "icon16/wrench_orange.png", false, false, "WMC related settings" )
 end)

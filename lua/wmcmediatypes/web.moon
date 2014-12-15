@@ -68,18 +68,14 @@ class WebMediaType extends wyozimc.BaseMediaType
 
 			mat = \GetHTMLMaterial()
 
-			-- HTMLMat dimensions are constrained to powers of two, so we use UV and fraction of wanted dims and PoT dims to get correct scaling
-			
+			-- HTMLMat dimensions are constrained to powers of two, so we use UV
+			-- and fraction of wanted dimensions and PoT dimensions to get correct scaling
+
 			w_frac, h_frac = vis_pref_width / mat\Width!, vis_pref_height / mat\Height!
 
 			surface.SetMaterial(mat)
 			surface.SetDrawColor(255, 255, 255)
-			--surface.DrawTexturedRect(0, 0, data.w or vis_pref_width, data.h or vis_pref_height)
 			surface.DrawTexturedRectUV(0, 0, data.w or vis_pref_width, data.h or vis_pref_height, 0, 0, w_frac, h_frac)
-
-			if cvars.Bool("wyozimc_debug")
-				surface.SetDrawColor(255, 127, 0, 20)
-				surface.DrawRect(0, 0, data.w or vis_pref_width, data.h or vis_pref_height)
 
 	destroy: =>
 		html_pool\free(@html)

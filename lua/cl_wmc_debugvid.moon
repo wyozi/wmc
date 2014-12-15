@@ -1,3 +1,4 @@
+-- Handles drawing debug video output to the screen, if a convar is set
 
 debug_mat = Material("models/weapons/v_toolgun/screen")
 local debug_rt
@@ -16,8 +17,8 @@ hook.Add "HUDPaint", "WyoziMCDebugVid", ->
 
 	for k,c in pairs(wyozimc.DebugContainers)
 
-		-- Draw visualization to a render target. Expensive but doesn't matter; this is only for debugging and fixes problems with
-		--	coordinate system origins etc
+		-- Draw visualization to a render target. Expensive, but doesn't matter; this is only for debugging and using RT fixes problems with
+		-- coordinate system origins etc
 		render.PushRenderTarget(debug_rt)
 
 		do

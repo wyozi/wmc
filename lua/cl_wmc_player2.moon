@@ -53,9 +53,9 @@ class MainMediaContainer extends wyozimc.MediaContainer
 	get_debug_id: =>
 		"MainContainer"
 
-	-- If you want to cache BASS handles, this'd be a good place to return them It's assumed that bass handles
-	--  are cleared after being return from here
-	get_cached_bass_handle: (url) => 
+	-- If you want to cache BASS handles, this'd be a good place to return them.
+	-- It's assumed that bass handles are cleaned up after being returned here
+	get_cached_bass_handle: (url) =>
 		if handle = wyozimc.CachedMedia[url]
 			wyozimc.CachedMedia[url] = nil
 			return handle
@@ -67,10 +67,11 @@ concommand.Add("wyozimc_refreshmc", ->
 	wyozimc.MainContainer = MainMediaContainer!)
 
 hook.Add "Think", "WyoziMCMaintainMainVolume", ->
-	--MsgN(wyozimc.MainContainer)
 	wyozimc.MainContainer\volume_think!
 
--- Override some of the old global functions
+-- These global functions should technically be called using wyozimc.MainContainer
+-- They are here for legacy reasons, but will probably not be removed, so feel
+-- free to use them
 
 wyozimc.PlayUrl = (url, startat, flags, extras) ->
 	wyozimc.MainContainer\play_url(url, startat, flags)
@@ -89,7 +90,7 @@ net.Receive "wyozimc_play", ->
 	url = net.ReadString()
 	flags = net.ReadUInt(32)
 	extras = net.ReadTable()
-	
+
 	if url == ""
 		wyozimc.Debug("Got empty url, assuming we need to stop. Flags: " .. bit.tohex(flags))
 		wyozimc.Stop(bit.band(flags, wyozimc.FLAG_WAS_GLOBAL_REQUEST) == wyozimc.FLAG_WAS_GLOBAL_REQUEST)
@@ -99,7 +100,7 @@ net.Receive "wyozimc_play", ->
 
 net.Receive "wyozimc_cache", ->
 	url = net.ReadString()
-	
+
 	provider, udata = wyozimc.FindProvider(url)
 	if not provider
 		ErrorNoHalt("Trying to cache something with no provider: " .. tostring(url))

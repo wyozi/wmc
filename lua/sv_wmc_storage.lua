@@ -1,3 +1,10 @@
+--[[
+	Storage and serverside media player functions.
+
+	TODO: move sql data source somewhere else
+	TODO: move media player serverside functions somewhere else
+]]
+
 util.AddNetworkString("wyozimc_edit")
 util.AddNetworkString("wyozimc_list") -- also used for list send requirements
 util.AddNetworkString("wyozimc_play")
@@ -170,7 +177,7 @@ net.Receive("wyozimc_edit", function(le, cl)
 		local id = net.ReadString()
 
 		if not wyozimc.HasPermission(cl, "Edit") then cl:ChatPrint("No permission!") return end
-		
+
 		local media = wyozimc.GetMediaByLink(id)
 		if not media then
 			cl:ChatPrint("Not in media list?")
@@ -187,7 +194,7 @@ net.Receive("wyozimc_edit", function(le, cl)
 		local id = net.ReadString()
 
 		if not wyozimc.HasPermission(cl, "Delete") then cl:ChatPrint("No permission!") return end
-		
+
 		local media = wyozimc.GetMediaByLink(id)
 		if not media then
 			cl:ChatPrint("Not in media list?")
@@ -237,7 +244,7 @@ net.Receive("wyozimc_list", function(le, cl)
 				wyozimc.Debug("Iteration #", i, " bytecount: ", net.BytesWritten())
 			net.Send(cl)
 		end
-		
+
 	else
 		wyozimc.Debug("We got a CRC match! Not sending the list again")
 	end
@@ -271,7 +278,7 @@ net.Receive("wyozimc_play", function(le, cl)
 			cl:ChatPrint("Trying to play media with no valid provider")
 			return
 		end
-		
+
 		local media = wyozimc.GetMediaByLink(wsp)
 		if media then
 			mediatitle = media.Title
