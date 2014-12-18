@@ -214,6 +214,15 @@ class MediaContainer
 				@stop!)
 			wdebug("Stopping media because of error message: #{msg}")
 
+
+	query_elapsed: =>
+		--if pd = @play_data
+		--	if fqe = pd.provider.FuncQueryElapsed
+		--		@player_browser\Call(fqe!)
+
+		-- TODO make work
+
+
 	--- The function that updates the media container's volume from local volume
 	-- Just call this function in a Think hook or equivalent.
 	volume_think: =>
