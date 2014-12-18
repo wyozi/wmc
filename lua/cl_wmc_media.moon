@@ -85,8 +85,8 @@ class MediaContainer
 	-- to work with all providers
 	-- @param flags Optional flags. See sh_wmc_utils.lua
 	play_url: (url, startat, flags = 0) =>
-		play_prevented, reason = @can_play(url, flags)
-		if play_prevented
+		can_play, reason = @can_play(url, flags)
+		if not can_play
 			return wyozimc.Debug("Prevented playing #{url} because #{reason}")
 
 		-- Get the provider (e.g. YouTube or Vimeo) and data related to the provider
