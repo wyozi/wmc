@@ -82,11 +82,14 @@
 		}
 
 		function setYoutubeVolume(vol) {
-			if (player == undefined) {
-				document.getElementById("player1").setVolume(vol);
+			if (player) {
+				player.setVolume(vol);
 			}
 			else {
-				player.setVolume(vol);
+				var el = document.getElementById("player1");
+				if (el) {
+					el.setVolume(vol);
+				}
 			}
 		}
 
