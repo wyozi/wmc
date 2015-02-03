@@ -11,7 +11,7 @@ wmcjs = {};
 		}
 		return result;
 	}
-	exports.hasFlash = function() {
+	exports.flashVersion = function() {
 		// Detect flash (http://stackoverflow.com/a/9865667)
 		return (function() {
 			var a = !1,
