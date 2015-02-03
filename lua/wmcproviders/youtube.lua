@@ -23,7 +23,7 @@ wyozimc.AddProvider({
 	UrlPatterns = all_patterns,
 	QueryMeta = function(udata, callback, failCallback)
 		local uri = udata.Matches[1]
-		
+
 		local url = Format("http://gdata.youtube.com/feeds/api/videos/%s?alt=json", uri)
 
 		wyozimc.Debug("Fetching query for " .. uri .. " from " .. url)
@@ -36,7 +36,7 @@ wyozimc.AddProvider({
 
 			local data = {}
 			data["URL"] = "http://www.youtube.com/watch?v=" .. uri
-			
+
 			local jsontbl = util.JSONToTable(result)
 
 			if jsontbl and jsontbl.entry then
@@ -62,7 +62,7 @@ wyozimc.AddProvider({
 
 		local startat = data.StartAt or 0
 
-		mtype.html:OpenURL(string.format("http://wyozi.github.io/wmc/players/youtube.html?vid=%s&start=%d", wyozimc.JSEscape(data.Matches[1]), startat))
+		mtype.html:OpenURL(string.format("http://wyozi.github.io/wmc/players/youtube.html?vid=%s&forcehtml5=true&start=%d", wyozimc.JSEscape(data.Matches[1]), startat))
 	end,
 	ParseUData = function(udata)
 		if udata.Matches[2] and udata.Matches[3] then -- Minutes and seconds
@@ -74,9 +74,7 @@ wyozimc.AddProvider({
 	MediaType = "web",
 	FuncSetVolume = function(mtype, volume)
 		mtype.html:RunJavascript([[
-		try {
-			document.getElementById('player1').setVolume(]] .. (volume*100) .. [[);
-		} catch (e) {}
+		setYoutubeVolume(]] .. (volume*100) .. [[)
 		]])
 	end,
 	FuncQueryElapsed = function(mtype)
