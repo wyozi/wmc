@@ -8,4 +8,4 @@ Simplest way to get WMC is to download the latest version from https://github.co
 
 If you want to use the latest version on git, you'll need to download [MoonScript](http://moonscript.org/) compiler. You can download the compiler binaries for Windows from http://moonscript.org/bin/moonscript-0.2.6.zip.
 
-Run ```make.bat``` to compile all MoonScript files in WMC.
+Run ```make_moonscript.bat``` to compile all MoonScript files in WMC.
