@@ -2,6 +2,8 @@
 
 Wyozi Media Center is an addon for Garry's Mod, that adds extensive media playing capabilities. It is built to be easily extendable. For example displaying video uses an isolated MoonScript class, which means it is easy to display video on whatever prop/surface/screen location you want.
 
+__Note:__ WMC is obsolete and many of its features are broken. If you'd like to create your own media addon, see [medialib](https://github.com/wyozi/gmod-medialib).
+
 # Installation
 
 Simplest way to get WMC is to download the latest version from https://github.com/wyozi/wmc/releases.
